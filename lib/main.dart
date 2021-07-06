@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yourcourt/src/Menu.dart';
-import 'package:yourcourt/src/login.dart';
+import 'package:yourcourt/src/Screens/LoginPage.dart';
 
 void main() => runApp(MyApp());
 

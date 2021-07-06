@@ -28,9 +28,39 @@ class _MenuLateralState extends State<MenuLateral>
       child: ListView(
         children: <Widget>[
           new UserAccountsDrawerHeader(
-              accountName: Text(preferences.getString("username"), style: TextStyle(color: Colors.purple),),
-              decoration: BoxDecoration(
-          ))
+              accountName: Text(preferences.getString("username"), style: TextStyle(color: Colors.black54),),
+              decoration: BoxDecoration(image: DecorationImage(
+                image: NetworkImage("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8pDaYsgZdEb5yQgxaeN-RFnBppSslZiNNMg&usqp=CAU"),
+                fit: BoxFit.cover
+              )
+          ),
+          ),
+          Ink(
+            color: Colors.lightBlueAccent,
+            child: new ListTile(
+              title: Text("Inicio", style: TextStyle(color: Colors.white),),
+            ),
+          ),
+
+          new ListTile(
+            title: Text("Pistas"),
+          ),
+          Ink(
+            color: Colors.lightBlueAccent,
+            child: new ListTile(
+              title: Text("Instalaciones", style: TextStyle(color: Colors.white),),
+            ),
+          ),
+          new ListTile(
+            title: Text("Noticias"),
+          ),
+          Ink(
+            color: Colors.lightBlueAccent,
+            child: new ListTile(
+              title: Text("Escuela", style: TextStyle(color: Colors.white),),
+            ),
+          ),
+
         ],
       ),
     );
