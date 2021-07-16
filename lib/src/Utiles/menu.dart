@@ -42,7 +42,7 @@ class _MenuLateralState extends State<MenuLateral>
                       style: TextStyle(color: Colors.black54),),
                     accountEmail: Text(getEmail(snapshot.data), style: TextStyle(color: Colors.black54),),
                     decoration: BoxDecoration(image: DecorationImage(
-                        image: NetworkImage("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8pDaYsgZdEb5yQgxaeN-RFnBppSslZiNNMg&usqp=CAU"),
+                        image: NetworkImage(getImage(snapshot.data)),
                         fit: BoxFit.cover
                     )
                     ),
@@ -111,6 +111,10 @@ class _MenuLateralState extends State<MenuLateral>
 
   String getEmail(User data){
     return data.email;
+  }
+  
+  String getImage(User data){
+    return data.imageUrl;
   }
 
   Future<User> accDetails() async {

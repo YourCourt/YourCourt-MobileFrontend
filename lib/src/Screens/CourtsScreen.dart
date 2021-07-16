@@ -5,6 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:yourcourt/src/Utiles/menu.dart';
 import '../models/Court.dart';
 import '../models/ImageOf.dart';
+import 'LoginPage.dart';
+import 'PerfilScreen.dart';
 
 class CourtsPage extends StatefulWidget {
 
@@ -14,33 +16,46 @@ class CourtsPage extends StatefulWidget {
 
 class _CourtsPageState extends State<CourtsPage> {
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("YourCourt", style: TextStyle(color: Colors.white)),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => LoginPage()), (Route<dynamic> route) => false);
+            },
+            child: Text("Log Out", style: TextStyle(color: Colors.white)),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => MiPerfil()), (Route<dynamic> route) => false);
+            },
+            child: Text("Mi perfil", style: TextStyle(color: Colors.white)),
+          ),
+        ],
       ),
 
-        body: Container(
-          child: FutureBuilder <List<Court>>(
-              future: getCourts(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData){
-                  return Container(
-                    child: Column(
+        body: FutureBuilder <List<Court>>(
+                  future: getCourts(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return GridView.count(
+                        crossAxisCount: 2,
                         children: listCourts(snapshot.data),
-                    ),
-                  );
-                }
-                else{
-                  return Container(
-                    child: Text("No disponible"),
-                  );
-                }
-              }
-          ),
-        ),
-      drawer: MenuLateral(),
+                      );
+                    } else {
+                      return Container(
+                        child: Text("No disponible"),
+                      );
+                    }
+                  }
+                  ),
+
+            drawer: MenuLateral(),
     );
 
   }
@@ -51,12 +66,34 @@ class _CourtsPageState extends State<CourtsPage> {
 
     for (var court in data){
       courts.add(
-                Text(court.courtType, style: TextStyle(color: Colors.black),
+          Container(
+            padding: const EdgeInsets.all(8),
+            child: CircleAvatar(
+              backgroundImage: NetworkImage(court.image.imageUrl),
+              child: Text(court.courtType, style: TextStyle(color: Colors.black),
+              ),
             ),
+          ),
       );
     }
     return courts;
+
   }
+
+/*  List<Widget> listCourts(List<Court> data){
+
+    List<Widget> courts = [];
+
+    for (var court in data){
+      courts.add(
+          Card(
+            child: pistas(court),
+          )
+      );
+    }
+    return courts;
+  }*/
+
 
   Future<List<Court>> getCourts() async {
     List<Court> courts = [];
@@ -68,11 +105,13 @@ class _CourtsPageState extends State<CourtsPage> {
       jsonResponse = json.decode(response.body);
     }
     for (var item in jsonResponse) {
-      print(item[0]);
-      ImageOf imageCourt = ImageOf(name:item['image'][1], imageUrl:item['image'][2]);
+
+      /*ImageOf imageCourt = ImageOf(name:item['image']['name'], imageUrl:item['image']['imageUrl']);
+
       Court pista = Court(name:item['name'], description:item['description'],
           courtType:item['courtType'], image:imageCourt);
-      courts.add(pista);
+      courts.add(pista);*/
+      courts.add(Court.fromJson(item));
     }
     print("Pistas: ${courts}");
     return courts;
