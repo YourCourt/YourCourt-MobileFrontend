@@ -3,8 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yourcourt/src/Utiles/already_have_an_account_check.dart';
+import 'package:yourcourt/src/providers/UserProvider.dart';
 import '../../main.dart';
 import 'SignUpPage.dart';
 
@@ -61,8 +63,10 @@ class _LoginPageState extends State<LoginPage> {
         });
         sharedPreferences.setString("token", jsonResponse['token']);
         sharedPreferences.setString("username", username);
+
         print("Username: ${sharedPreferences.get("username")}");
         Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) =>   MainPage()), (Route<dynamic> route) => false);
+
       }
     }
     else {

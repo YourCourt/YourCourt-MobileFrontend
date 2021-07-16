@@ -1,10 +1,14 @@
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:yourcourt/src/Menu.dart';
+import 'package:yourcourt/src/Utiles/menu.dart';
 import 'package:yourcourt/src/Screens/LoginPage.dart';
+import 'package:yourcourt/src/Screens/PerfilScreen.dart';
+import 'package:yourcourt/src/Utiles/app_bar_cabecera.dart';
 
 void main() => runApp(MyApp());
+
 
 class MyApp extends StatelessWidget {
   @override
@@ -54,6 +58,12 @@ class _MainPageState extends State<MainPage> {
               Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => LoginPage()), (Route<dynamic> route) => false);
             },
             child: Text("Log Out", style: TextStyle(color: Colors.white)),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => MiPerfil()), (Route<dynamic> route) => false);
+            },
+            child: Text("Mi perfil", style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
