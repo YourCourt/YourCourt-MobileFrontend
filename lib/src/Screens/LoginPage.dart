@@ -24,8 +24,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(statusBarColor: Colors.transparent));
-    return Scaffold(
-      body: Container(
+    return Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
               colors: [Colors.blue, Colors.teal],
@@ -40,8 +39,7 @@ class _LoginPageState extends State<LoginPage> {
             registerSection(),
           ],
         ),
-      ),
-    );
+      );
   }
 
 

@@ -53,7 +53,7 @@ class _SignUpPageState extends State<SignUpPage> {
     };
 
     var jsonResponse;
-    print('JSON encode: ${json.encode(data)}');
+
     var response = await http.post(
         "https://dev-yourcourt-api.herokuapp.com/users",
         body: json.encode(data),

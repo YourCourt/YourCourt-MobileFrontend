@@ -1,18 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:yourcourt/src/Utiles/cabeceras.dart';
+import 'package:yourcourt/src/Utiles/principal_structure.dart';
 import 'package:yourcourt/src/Utiles/menu.dart';
 
 import '../../main.dart';
 import 'LoginPage.dart';
 
-class MiPerfil extends StatefulWidget {
+class MyProfile extends StatefulWidget {
 
   @override
-  _MiPerfilState createState() => _MiPerfilState();
+  _MyProfileState createState() => _MyProfileState();
 }
 
-class _MiPerfilState extends State<MiPerfil> {
+class _MyProfileState extends State<MyProfile> {
 
   SharedPreferences sharedPreferences;
 
@@ -31,35 +33,18 @@ class _MiPerfilState extends State<MiPerfil> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("YourCourt", style: TextStyle(color: Colors.white)),
-        actions: <Widget> [
-          TextButton(
-            onPressed: () {
-              sharedPreferences.clear();
-              Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => LoginPage()), (Route<dynamic> route) => false);
-            },
-            child: Text("Log Out", style: TextStyle(color: Colors.white)),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => MainPage()), (Route<dynamic> route) => false);
-            },
-            child: Text("Volver", style: TextStyle(color: Colors.white)),
-          ),
-        ],
+    return Principal(context, sharedPreferences, appHeadboard(context, sharedPreferences), body(), MenuLateral());
+  }
+
+  Widget body() {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+            colors: [Colors.blue, Colors.teal],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter),
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-              colors: [Colors.blue, Colors.teal],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter),
-        ),
-        child: Text("Actualizar", style: TextStyle(color: Colors.white),),
-        ),
-      drawer: MenuLateral(),
-      );
+      child: Text("Actualizar", style: TextStyle(color: Colors.white),),
+    );
   }
 }
