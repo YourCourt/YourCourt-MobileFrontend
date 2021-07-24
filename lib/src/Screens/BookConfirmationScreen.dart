@@ -8,7 +8,6 @@ import 'package:yourcourt/src/Utiles/menu.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yourcourt/src/models/BookingDate.dart';
 import 'package:yourcourt/src/models/Court.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 import 'LoginPage.dart';
@@ -56,9 +55,8 @@ class _BookConfirmationState extends State<BookConfirmation> {
           style: TextStyle(color: Colors.black),),
         ElevatedButton(
             onPressed: () {
-              Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-                  builder: (BuildContext context) => MyBooks()), (
-                  Route<dynamic> route) => false);
+              confirmBook();
+
               },
             child: Text(
               "Confirmar reserva", style: TextStyle(color: Colors.black),)),
@@ -66,30 +64,8 @@ class _BookConfirmationState extends State<BookConfirmation> {
     );
   }
 
-
-  confirmBook() async {
-
+  getUserId(String username) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String username = sharedPreferences.getString("username");
-    Future<int> userId = getUserId(username);
-
-    Map data = {
-      "court": widget.court.id,
-      "endDate": widget.date+"T"+widget.hour.endHour,
-      "lines": [
-        {
-          "discount": 0,
-          "productId": 1,
-          "quantity": 1
-        }
-      ],
-      "startDate": widget.date+"T"+widget.hour.startHour,
-      "user": userId
-    };
-  }
-
-  Future<int> getUserId(String username) async {
-
     int userId;
 
     var jsonResponse;
@@ -105,8 +81,41 @@ class _BookConfirmationState extends State<BookConfirmation> {
     }
 
     userId = jsonResponse["id"];
+    sharedPreferences.setInt("id", userId);
 
     return userId;
 
   }
+
+  confirmBook() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String username = sharedPreferences.getString("username");
+    getUserId(username);
+
+    Map data = {
+      "court": widget.court.id,
+      "endDate": widget.date + "T" + widget.hour.endHour,
+      "lines": [
+      ],
+      "startDate": widget.date + "T" + widget.hour.startHour,
+      "user": sharedPreferences.getInt("id"),
+    };
+
+    var response = await http.post(
+        "https://dev-yourcourt-api.herokuapp.com/bookings",
+        body: json.encode(data),
+        headers: {
+          "Accept": "application/json",
+          "Content-type": "application/json"
+        });
+
+    print(response.statusCode);
+
+    if (response.statusCode == 201) {
+      print("Reserva creada");
+    }
+
+
+  }
+
 }

@@ -51,10 +51,10 @@ class _LoginPageState extends State<LoginPage> {
     };
 
     var jsonResponse;
-    print('JSON encode: ${json.encode(data)}');
+
     var response = await http.post("https://dev-yourcourt-api.herokuapp.com/auth/login", body: json.encode(data), headers: {"Accept" : "application/json", "Content-type":"application/json"});
     if(response.statusCode == 201) {
-      jsonResponse = json.decode(response.body);
+    jsonResponse = json.decode(response.body);
       if(jsonResponse != null) {
         setState(() {
           _isLoading = true;

@@ -95,7 +95,6 @@ class _BookingPageState extends State<BookingPage> {
             });
           },
         ),
-
         seleccionHora(_date),
 
       ],
@@ -107,12 +106,26 @@ class _BookingPageState extends State<BookingPage> {
       return i +'\n';
     }
   }
+
+  double getDoubleNumber(String number) {
+    List<String> array = [];
+    array = number.split(":");
+    String numberToParse = array[0].trim()+"."+array[1].trim();
+    double numberToDouble = double.parse(numberToParse);
+    return numberToDouble;
+  }
+
   Future<List<BookDate>> getAvailableHours(int courtId, String date) async {
 
     List<BookDate> unAvailableHours = [];
     List<BookDate> availableHours = possibiltyHours;
 
-    print(date);
+    print(DateTime.now());
+    if(DateTime.now().toString().contains(date)){
+      availableHours.removeWhere((element) => getDoubleNumber(element.startHour)<DateTime.now().hour.toDouble());
+      print(getDoubleNumber("17:00"));
+      print(DateTime.now().hour.toDouble());
+    }
 
     var jsonResponse;
     var response = await http.get(
@@ -127,12 +140,9 @@ class _BookingPageState extends State<BookingPage> {
     }
     for (var book in jsonResponse){
 
-      unAvailableHours.add(BookDate(book[0], book[1]));
+      availableHours.remove(BookDate(book[0], book[1]));
 
     }
-
-
-    availableHours.retainWhere((element) => !unAvailableHours.contains(element));
 
     return availableHours;
 
@@ -143,16 +153,18 @@ class _BookingPageState extends State<BookingPage> {
 
     for (var hour in availableHours) {
       hours.add(
-          ListTile(
-            leading: new Icon(Icons.wysiwyg),
-            title: Text(hour.startHour+" -> "+hour.endHour, style: TextStyle(color: Colors.black),),
-            onTap: () {
-              setState(() {
-                _selected_hour=hour;
-                Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => BookConfirmation(date: _date, hour: _selected_hour, court: widget.court,)));
-              });
-            },
-          )
+            Expanded(
+              child: ListTile(
+                leading: new Icon(Icons.wysiwyg),
+                title: Text(hour.startHour+" -> "+hour.endHour, style: TextStyle(color: Colors.black),),
+                onTap: () {
+                  setState(() {
+                    _selected_hour=hour;
+                    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => BookConfirmation(date: _date, hour: _selected_hour, court: widget.court,)));
+                  });
+                },
+              ),
+            )
       );
     }
 
@@ -173,6 +185,7 @@ class _BookingPageState extends State<BookingPage> {
                   child: Text("Seleccionar hora", style: TextStyle(color: Colors.white),),
                   onPressed: () {
                     showModalBottomSheet(
+                      isScrollControlled: true,
                         context: context,
                         builder: (context) {
                           return Column(

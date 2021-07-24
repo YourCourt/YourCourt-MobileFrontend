@@ -79,18 +79,13 @@ class _CourtsPageState extends State<CourtsPage> {
                     showModalBottomSheet(
                         context: context,
                         builder: (context) {
-                          return Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                ListTile(
+                          return ListTile(
                                   leading: new Icon(Icons.wysiwyg),
                                   title: Text("Reservar", style: TextStyle(color: Colors.black),),
                                   onTap: () {
                                     Navigator.push(context, MaterialPageRoute(builder: (context) => BookingPage(court: court,)));
                                   },
-                                )
-                              ]
-                          );
+                                );
                         }
                     );
                   },

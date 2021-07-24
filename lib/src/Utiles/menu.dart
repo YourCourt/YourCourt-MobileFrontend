@@ -7,6 +7,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:yourcourt/main.dart';
 import 'package:yourcourt/src/Screens/CourtsScreen.dart';
 import 'package:http/http.dart' as http;
+import 'package:yourcourt/src/Screens/MyBooksScreen.dart';
 
 import '../models/User.dart';
 
@@ -93,6 +94,14 @@ class _MenuLateralState extends State<MenuLateral>
                           MaterialPageRoute(builder: (context) => MainPage()));
                     }
                 ),
+                  ElevatedButton(
+                      child: Text(
+                        "Mis reservas", style: TextStyle(color: Colors.white),),
+                      onPressed: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => MyBooks()));
+                      }
+                  ),
               ],
             );
           } else() {
