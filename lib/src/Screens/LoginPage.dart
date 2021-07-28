@@ -1,12 +1,9 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yourcourt/src/Utiles/already_have_an_account_check.dart';
-import 'package:yourcourt/src/providers/UserProvider.dart';
 import '../../main.dart';
 import 'SignUpPage.dart';
 
@@ -24,24 +21,29 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(statusBarColor: Colors.transparent));
-    return Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-              colors: [Colors.blue, Colors.teal],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter),
-        ),
-        child: _isLoading ? Center(child: CircularProgressIndicator()) : ListView(
-          children: <Widget>[
-            headerSection(),
-            textSection(),
-            buttonSection(),
-            registerSection(),
-          ],
-        ),
-      );
+    return Scaffold(
+      body: body(),
+    );
   }
 
+  Widget body(){
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+            colors: [Colors.blue, Colors.teal],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter),
+      ),
+      child: _isLoading ? Center(child: CircularProgressIndicator()) : ListView(
+        children: <Widget>[
+          headerSection(),
+          textSection(),
+          buttonSection(),
+          registerSection(),
+        ],
+      ),
+    );
+  }
 
   signIn(String username, password) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();

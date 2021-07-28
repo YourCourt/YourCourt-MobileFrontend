@@ -123,3 +123,5 @@ app.*.symbols
 **/ios/Flutter/flutter_export_environment.sh
 **/ios/ServiceDefinitions.json
 **/ios/Runner/GeneratedPluginRegistrant.*
+build/app/outputs/flutter-apk/app-debug.apk
+build/app/outputs/apk/debug/app-debug.apk
