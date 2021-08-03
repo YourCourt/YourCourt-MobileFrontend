@@ -1,4 +1,4 @@
-#Wed Jul 28 18:49:08 CEST 2021
+#Tue Aug 03 19:14:54 CEST 2021
 base.0=A\:\\Usuario\\Desktop\\TFG_Workspace_Flutter\\YourCourt-MobileFrontend\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
 renamed.0=classes.dex
 path.0=classes.dex

@@ -10,12 +10,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yourcourt/src/models/BookingDate.dart';
 import 'package:yourcourt/src/models/Court.dart';
 import 'package:http/http.dart' as http;
-import 'package:yourcourt/src/models/Product.dart';
-import 'package:yourcourt/src/models/ProductBooking.dart';
 
 import 'LoginPage.dart';
-import 'MyBooksScreen.dart';
-import 'PerfilScreen.dart';
+
 
 class BookConfirmation extends StatefulWidget {
   final String date;
@@ -53,7 +50,7 @@ class _BookConfirmationState extends State<BookConfirmation> {
   String _productType = "Textil";
 
   Widget show = Container(
-    child: Text("Prueba de dioses"),
+    child: Text("Prueba ")
   );
   bool _search = false;
 
@@ -82,8 +79,8 @@ class _BookConfirmationState extends State<BookConfirmation> {
                                     onChanged: (dynamic value) {
                                       setState(() {
                                         _productType = value;
+                                        show = ShowBookableProducts(productType: _productType,);
                                       });
-
                                     },
                                     value: _productType,
                                     hint: Text("Elige un tipo de producto",),
@@ -93,19 +90,6 @@ class _BookConfirmationState extends State<BookConfirmation> {
                                           child: new Text(item),
                                         );
                                       }).toList(),
-
-                                  ),
-                                  Row(
-                                    children: [
-                                      ElevatedButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              show = ShowBookableProducts(productType: _productType,);
-                                            });
-
-                                          },
-                                          child: Text("Buscar", style: TextStyle(color: Colors.black),)),
-                                    ],
                                   ),
                                   show,
                                 ]

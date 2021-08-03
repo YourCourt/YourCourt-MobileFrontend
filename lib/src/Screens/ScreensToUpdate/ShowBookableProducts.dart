@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:yourcourt/src/models/Product.dart';
 import 'package:http/http.dart' as http;
 
@@ -64,16 +65,21 @@ class _ShowBookableProductsState extends State<ShowBookableProducts> {
           children: [
             Image(
               image: NetworkImage(product.image.imageUrl),),
-            Text(product.name),
-            Text(product.description),
-            Text(product.bookPrice.toString()),
-            Text(product.productType),
-            Text(product.stock.toString()),
+            Text(product.name, style: TextStyle(color: Colors.black),),
+            Text(product.description, style: TextStyle(color: Colors.black),),
+            Text(product.bookPrice.toString(), style: TextStyle(color: Colors.black),),
+            Text(product.productType, style: TextStyle(color: Colors.black),),
+            Text(product.stock.toString(), style: TextStyle(color: Colors.black),),
+            ElevatedButton(
+                onPressed: () {
+                },
+                child: Text("Añadir", style: TextStyle(color: Colors.black),)
+            ),
           ],
         ));
       }
     } else{
-      showList.add(Container(child: Text("No existen productos alquilables de este tipo"),));
+      showList.add(Container(child: Text("No existen productos alquilables de este tipo", style: TextStyle(color: Colors.black),),));
     }
 
     return showList;
