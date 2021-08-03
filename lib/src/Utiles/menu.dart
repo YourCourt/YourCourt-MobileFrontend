@@ -7,9 +7,9 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:yourcourt/main.dart';
 import 'package:yourcourt/src/Screens/CourtsScreen.dart';
 import 'package:http/http.dart' as http;
-import 'package:yourcourt/src/Screens/MyBooksScreen.dart';
+import 'package:yourcourt/src/Screens/bookingScreen/MyBooksScreen.dart';
 
-import '../models/User.dart';
+import '../models/user/User.dart';
 
 
 class MenuLateral extends StatefulWidget{

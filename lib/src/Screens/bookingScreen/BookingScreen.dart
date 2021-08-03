@@ -7,13 +7,13 @@ import 'package:intl/intl.dart';
 import 'package:yourcourt/src/Utiles/cabeceras.dart';
 import 'package:yourcourt/src/Utiles/principal_structure.dart';
 import 'package:yourcourt/src/Utiles/menu.dart';
-import 'package:yourcourt/src/models/BookingDate.dart';
+import 'package:yourcourt/src/models/book/BookingDate.dart';
 import 'package:yourcourt/src/models/Court.dart';
 import 'package:http/http.dart' as http;
 
 import 'BookConfirmationScreen.dart';
-import 'LoginPage.dart';
-import 'PerfilScreen.dart';
+import '../login/LoginPage.dart';
+import '../PerfilScreen.dart';
 
 class BookingPage extends StatefulWidget {
 

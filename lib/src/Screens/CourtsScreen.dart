@@ -8,8 +8,8 @@ import 'package:yourcourt/src/Utiles/menu.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/Court.dart';
 import '../models/ImageOf.dart';
-import 'BookingScreen.dart';
-import 'LoginPage.dart';
+import 'bookingScreen/BookingScreen.dart';
+import 'login/LoginPage.dart';
 import 'PerfilScreen.dart';
 
 class CourtsPage extends StatefulWidget {

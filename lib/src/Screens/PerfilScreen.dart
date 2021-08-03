@@ -6,7 +6,7 @@ import 'package:yourcourt/src/Utiles/principal_structure.dart';
 import 'package:yourcourt/src/Utiles/menu.dart';
 
 import '../../main.dart';
-import 'LoginPage.dart';
+import 'login/LoginPage.dart';
 
 class MyProfile extends StatefulWidget {
 

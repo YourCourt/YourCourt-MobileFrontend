@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yourcourt/src/Utiles/cabeceras.dart';
 import 'package:yourcourt/src/Utiles/menu.dart';
-import 'package:yourcourt/src/Screens/LoginPage.dart';
+import 'package:yourcourt/src/Screens/login/LoginPage.dart';
 import 'package:yourcourt/src/Screens/PerfilScreen.dart';
 import 'package:yourcourt/src/Utiles/principal_structure.dart';
 

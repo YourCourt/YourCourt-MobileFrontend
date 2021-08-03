@@ -2,16 +2,16 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:yourcourt/src/Screens/ScreensToUpdate/ShowBookableProducts.dart';
 import 'package:yourcourt/src/Utiles/cabeceras.dart';
 import 'package:yourcourt/src/Utiles/principal_structure.dart';
 import 'package:yourcourt/src/Utiles/menu.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:yourcourt/src/models/BookingDate.dart';
+import 'package:yourcourt/src/models/book/BookingDate.dart';
 import 'package:yourcourt/src/models/Court.dart';
 import 'package:http/http.dart' as http;
+import 'package:yourcourt/src/models/product/Product.dart';
 
-import 'LoginPage.dart';
+import '../login/LoginPage.dart';
 
 
 class BookConfirmation extends StatefulWidget {
@@ -79,7 +79,6 @@ class _BookConfirmationState extends State<BookConfirmation> {
                                     onChanged: (dynamic value) {
                                       setState(() {
                                         _productType = value;
-                                        show = ShowBookableProducts(productType: _productType,);
                                       });
                                     },
                                     value: _productType,
@@ -91,7 +90,7 @@ class _BookConfirmationState extends State<BookConfirmation> {
                                         );
                                       }).toList(),
                                   ),
-                                  show,
+                                  ShowBookableProducts(_productType),
                                 ]
                             );
                           } else{
@@ -248,4 +247,77 @@ class _BookConfirmationState extends State<BookConfirmation> {
   //
   //   return showList;
   // }
+}
+
+class ShowBookableProducts extends StatelessWidget {
+  final String productType;
+
+  ShowBookableProducts(this.productType);
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+        future: getBookableProduct(productType),
+        builder: (context, snapshot){
+          if(snapshot.hasData){
+            return Expanded(
+              child: GridView.count(
+                  crossAxisCount: 2,
+                  children: showBookableProducts(snapshot.data)
+              ),
+            );
+          } else {
+            return Container(child: Text("No hay productos alquilables"),);
+          }
+        });
+  }
+
+  Future<List<Product>> getBookableProduct(String type) async {
+    List<Product> products = [];
+    var jsonResponse;
+
+    var response = await http.get("https://dev-yourcourt-api.herokuapp.com/products/bookableProductsByType?typeName="+type);
+    if (response.statusCode==200){
+      jsonResponse = json.decode(response.body);
+      for (var item in jsonResponse) {
+        products.add(Product.fromJson(item));
+      }
+    }
+    return products;
+
+  }
+
+  // Widget showBookableProducts(Product product) {
+  //   return new Image(
+  //     image: NetworkImage(product.image.imageUrl),);
+  // }
+
+  List<Widget> showBookableProducts(List<Product> products) {
+    List<Widget> showList = [];
+
+    if(products!=null){
+      for (var product in products) {
+        showList.add(ListView(
+          children: [
+            Image(
+              image: NetworkImage(product.image.imageUrl),),
+            Text(product.name, style: TextStyle(color: Colors.black),),
+            Text(product.description, style: TextStyle(color: Colors.black),),
+            Text(product.bookPrice.toString(), style: TextStyle(color: Colors.black),),
+            Text(product.productType, style: TextStyle(color: Colors.black),),
+            Text(product.stock.toString(), style: TextStyle(color: Colors.black),),
+            ElevatedButton(
+                onPressed: () {
+                },
+                child: Text("Añadir", style: TextStyle(color: Colors.black),)
+            ),
+          ],
+        ));
+      }
+    } else{
+      showList.add(Container(child: Text("No existen productos alquilables de este tipo", style: TextStyle(color: Colors.black),),));
+    }
+
+    return showList;
+  }
 }

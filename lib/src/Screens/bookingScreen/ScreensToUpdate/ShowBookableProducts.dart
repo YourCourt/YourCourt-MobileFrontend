@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:yourcourt/src/models/Product.dart';
+import 'package:yourcourt/src/models/product/Product.dart';
 import 'package:http/http.dart' as http;
 
 class ShowBookableProducts extends StatefulWidget {
