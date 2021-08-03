@@ -35,95 +35,15 @@ class _MenuLateralState extends State<MenuLateral>
         child: FutureBuilder (
           future: accDetails(),
           builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return ListView(
-                children: <Widget>[
-                  UserAccountsDrawerHeader(
-                    accountName: Text(getUsername(snapshot.data),
-                      style: TextStyle(color: Colors.black54),),
-                    accountEmail: Text(getEmail(snapshot.data), style: TextStyle(color: Colors.black54),),
-                    decoration: BoxDecoration(image: DecorationImage(
-                        image: NetworkImage(getImage(snapshot.data)),
-                        fit: BoxFit.cover
-                    )
-                    ),
-                  ),
-                  ElevatedButton(
-                    child: Text("Inicio", style: TextStyle(color: Colors.white),),
-                    onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => MainPage()));
-                      },
-                  ),
-                  ElevatedButton(
-                      child: Text(
-                        "Pistas", style: TextStyle(color: Colors.white),),
-                      onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(
-                            builder: (context) => CourtsPage()));
-                      }
-                      ),
-                  ElevatedButton(
-                      child: Text(
-                        "Instalaciones", style: TextStyle(color: Colors.white),),
-                      onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => MainPage()));
-                      }
-                      ),
-                  ElevatedButton(
-                      child: Text(
-                        "Noticias", style: TextStyle(color: Colors.white),),
-                      onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => MainPage()));
-                      }
-                ),
-                ElevatedButton(
-                    child: Text(
-                      "Escuela", style: TextStyle(color: Colors.white),),
-                    onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => MainPage()));
-                    }
-                ),
-                ElevatedButton(
-                    child: Text(
-                      "Productos", style: TextStyle(color: Colors.white),),
-                    onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => MainPage()));
-                    }
-                ),
-                  ElevatedButton(
-                      child: Text(
-                        "Mis reservas", style: TextStyle(color: Colors.white),),
-                      onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => MyBooks()));
-                      }
-                  ),
-              ],
-            );
-          } else() {
-            return Container(
-              child: Text("No disponible"),
-            );
-          };
+            if (snapshot.connectionState==ConnectionState.done) {
+              return Container(
+                child:_ListaDatosDeUsuario(snapshot.data),
+              );
+          }
+            return CircularProgressIndicator();
         },
-      )
+      ),
     );
-  }
-
-  String getUsername(User data){
-    return data.username;
-  }
-
-  String getEmail(User data){
-    return data.email;
-  }
-  
-  String getImage(User data){
-    return data.imageUrl;
   }
 
   Future<User> accDetails() async {
@@ -156,4 +76,94 @@ class _MenuLateralState extends State<MenuLateral>
     return preferences;
   }*/
 
+}
+
+class _ListaDatosDeUsuario extends StatelessWidget {
+  final User userActive;
+
+  _ListaDatosDeUsuario(this.userActive);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      children: <Widget>[
+        UserAccountsDrawerHeader(
+          accountName: Text(userActive.username,
+            style: TextStyle(color: Colors.black54),),
+          accountEmail: Text(userActive.email, style: TextStyle(color: Colors.black54),),
+          decoration: BoxDecoration(image: DecorationImage(
+              image: NetworkImage(userActive.imageUrl),
+              fit: BoxFit.cover
+          )
+          ),
+        ),
+        ElevatedButton(
+          child: Text("Inicio", style: TextStyle(color: Colors.white),),
+          onPressed: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => MainPage()));
+          },
+        ),
+        ElevatedButton(
+            child: Text(
+              "Pistas", style: TextStyle(color: Colors.white),),
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(
+                  builder: (context) => CourtsPage()));
+            }
+        ),
+        ElevatedButton(
+            child: Text(
+              "Instalaciones", style: TextStyle(color: Colors.white),),
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => MainPage()));
+            }
+        ),
+        ElevatedButton(
+            child: Text(
+              "Noticias", style: TextStyle(color: Colors.white),),
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => MainPage()));
+            }
+        ),
+        ElevatedButton(
+            child: Text(
+              "Escuela", style: TextStyle(color: Colors.white),),
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => MainPage()));
+            }
+        ),
+        ElevatedButton(
+            child: Text(
+              "Productos", style: TextStyle(color: Colors.white),),
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => MainPage()));
+            }
+        ),
+        ElevatedButton(
+            child: Text(
+              "Mis reservas", style: TextStyle(color: Colors.white),),
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => MyBooks()));
+            }
+        ),
+      ],
+    );
+  }
+
+  String getUsername(User data){
+    return data.username;
+  }
+
+  String getEmail(User data){
+    return data.email;
+  }
+
+  String getImage(User data){
+    return data.imageUrl;
+  }
 }
