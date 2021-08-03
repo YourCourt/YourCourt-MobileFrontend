@@ -95,24 +95,78 @@ class _BookingPageState extends State<BookingPage> {
             });
           },
         ),
-        seleccionHora(_date),
+
+        SeleccionaHora(_date, widget.court),
 
       ],
     );
   }
 
-  String getHourMessage(List<String> horas){
-    for (var i in horas){
-      return i +'\n';
-    }
-  }
+}
 
-  double getDoubleNumber(String number) {
-    List<String> array = [];
-    array = number.split(":");
-    String numberToParse = array[0].trim()+"."+array[1].trim();
-    double numberToDouble = double.parse(numberToParse);
-    return numberToDouble;
+class SeleccionaHora extends StatelessWidget {
+  final String date;
+  final Court court;
+
+  SeleccionaHora(this.date, this.court);
+
+  BookDate _selectedHour;
+
+  List<BookDate> possibiltyHours = [
+    BookDate('8:30', '10:00'),
+    BookDate('10:00', '11:00'),
+    BookDate('11:00', '12:00'),
+    BookDate('12:00', '13:00'),
+    BookDate('13:00', '14:00'),
+    BookDate('14:00', '15:00'),
+    BookDate('15:00', '16:00'),
+    BookDate('16:00', '17:00'),
+    BookDate('17:00', '18:00'),
+    BookDate('18:00', '19:00'),
+    BookDate('19:00', '20:00'),
+    BookDate('20:00', '21:00'),
+    BookDate('21:00', '22:00'),
+  ];
+
+
+  @override
+  Widget build(BuildContext context) {
+    if(date!=null){
+      return FutureBuilder(
+          future: getAvailableHours(court.id, date),
+          builder: (context, snapshot){
+            if(snapshot.hasData){
+              if(_selectedHour!=null){
+                Text(_selectedHour.startHour+" -> "+_selectedHour.endHour, style: TextStyle(color: Colors.black),);
+              }
+              else{
+                return ElevatedButton(
+                    child: Text("Seleccionar hora", style: TextStyle(color: Colors.white),),
+                    onPressed: () {
+                      showModalBottomSheet(
+                          isScrollControlled: true,
+                          context: context,
+                          builder: (context) {
+                            return Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: showAvailableHours(context, snapshot.data),
+                            );
+                          }
+                      );
+                    }
+                );
+              }
+            }
+            return Container(
+              child: Text("No disponible", style: TextStyle(color: Colors.black),),
+            );
+          }
+      );
+    }
+    return Container(
+      child: Text("Debe seleccionar una fecha para poder seleccionar la hora", style: TextStyle(color: Colors.black),),
+    );
+
   }
 
   Future<List<BookDate>> getAvailableHours(int courtId, String date) async {
@@ -148,68 +202,39 @@ class _BookingPageState extends State<BookingPage> {
 
   }
 
-  List<Widget> showAvailableHours(List<BookDate> availableHours) {
+  List<Widget> showAvailableHours(BuildContext context, List<BookDate> availableHours) {
     List<Widget> hours = [];
 
     for (var hour in availableHours) {
       hours.add(
-            Expanded(
-              child: ListTile(
-                leading: new Icon(Icons.wysiwyg),
-                title: Text(hour.startHour+" -> "+hour.endHour, style: TextStyle(color: Colors.black),),
-                onTap: () {
-                  setState(() {
-                    _selected_hour=hour;
-                    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => BookConfirmation(date: _date, hour: _selected_hour, court: widget.court,)));
-                  });
-                },
-              ),
-            )
+          Expanded(
+            child: ListTile(
+              leading: new Icon(Icons.wysiwyg),
+              title: Text(hour.startHour+" -> "+hour.endHour, style: TextStyle(color: Colors.black),),
+              onTap: () {
+                _selectedHour=hour;
+                  Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => BookConfirmation(date: date, hour: _selectedHour, court: court,)));
+              },
+            ),
+          )
       );
     }
 
     return hours;
   }
 
-  Widget seleccionHora(String date){
-    if (date!= null){
-      return FutureBuilder(
-          future: getAvailableHours(widget.court.id, date),
-          builder: (context, snapshot){
-            if(snapshot.hasData){
-              if(_selected_hour!=null){
-                Text(_selected_hour.startHour+" -> "+_selected_hour.endHour, style: TextStyle(color: Colors.black),);
-              }
-              else{
-                return ElevatedButton(
-                  child: Text("Seleccionar hora", style: TextStyle(color: Colors.white),),
-                  onPressed: () {
-                    showModalBottomSheet(
-                      isScrollControlled: true,
-                        context: context,
-                        builder: (context) {
-                          return Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: showAvailableHours(snapshot.data),
-                          );
-                        }
-                    );
-                  }
-                );
-              }
-            } else {
-              return Container(
-                child: Text("No disponible", style: TextStyle(color: Colors.black),),
-              );
-            }
-          }
-      );
+  String getHourMessage(List<String> horas){
+    for (var i in horas){
+      return i +'\n';
     }
-    else {
-      return Container(
-        child: Text("Debe seleccionar un día para poder seleccionar la hora"),
-      );
-    }
+  }
+
+  double getDoubleNumber(String number) {
+    List<String> array = [];
+    array = number.split(":");
+    String numberToParse = array[0].trim()+"."+array[1].trim();
+    double numberToDouble = double.parse(numberToParse);
+    return numberToDouble;
   }
 }
 
