@@ -10,6 +10,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yourcourt/src/models/product/Product.dart';
 import 'package:http/http.dart' as http;
 
+import 'BookConfirmationScreen.dart';
+
 class ProductBooking extends StatefulWidget {
 
   @override
@@ -47,22 +49,27 @@ class _ProductBookingState extends State<ProductBooking> {
         if (snapshot.hasData){
           return Column(
               children: [
-                DropdownButtonFormField(
-                  onChanged: (dynamic value) {
-                    setState(() {
-                      _productType = value;
-                    });
-                  },
-                  value: _productType,
-                  hint: Text("Elige un tipo de producto",),
-                  items: snapshot.data.map<DropdownMenuItem<String>>((String item) {
-                    return DropdownMenuItem<String>(
-                      value: item,
-                      child: new Text(item),
-                    );
-                  }).toList(),
+                Expanded(
+                  child: DropdownButtonFormField(
+                    onChanged: (dynamic value) {
+                      setState(() {
+                        _productType = value;
+                      });
+                    },
+                    value: _productType,
+                    hint: Text("Elige un tipo de producto",),
+                    items: snapshot.data.map<DropdownMenuItem<String>>((String item) {
+                      return DropdownMenuItem<String>(
+                        value: item,
+                        child: new Text(item),
+                      );
+                    }).toList(),
+                  ),
                 ),
-                showProducts(_productType),
+                Expanded(
+                  flex: 4,
+                    child: showProducts(_productType),
+                )
               ]
           );
         }
@@ -79,12 +86,12 @@ class _ProductBookingState extends State<ProductBooking> {
           future: getBookableProduct(productType),
           builder: (context, snapshot){
             if(snapshot.hasData){
-              return Expanded(
-                child: GridView.count(
+              return GridView.count(
                     crossAxisCount: 2,
-                    children: showBookableProducts(snapshot.data)
-                ),
-              );
+                    children: [
+                          showBookableProducts(snapshot.data),
+                    ]
+                );
             } else {
               return Container(child: Text("No hay productos alquilables"),);
             }
@@ -95,50 +102,67 @@ class _ProductBookingState extends State<ProductBooking> {
   }
 
   int _counterProduct = 0;
-  List<Widget> showBookableProducts(List<Product> products) {
-    List<Widget> showList = [];
-    
-    if(products!=null){
-      for (var product in products) {
-        showList.add(
-            ListView(
+  Widget showBookableProducts(List<Product> products) {
+
+    Widget showProduct = ListView.builder(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        itemCount: products.length,
+        itemBuilder: (BuildContext context, int index){
+          return Column(
               children: [
-                // Image(
-                //   image: NetworkImage(product.image.imageUrl),),
-                Text(product.name, style: TextStyle(color: Colors.black),),
-                Text(product.description, style: TextStyle(color: Colors.black),),
-                Text(product.bookPrice.toString(), style: TextStyle(color: Colors.black),),
-                Text(product.productType, style: TextStyle(color: Colors.black),),
-                Text(product.stock.toString(), style: TextStyle(color: Colors.black),),
-                // Row(
-                //   children: [
-                //     TextFormField(
-                //       initialValue: _counterProduct.toString(),
-                //       keyboardType: TextInputType.number,
-                //       readOnly: true,
-                //     ),
-                //     FloatingActionButton(
-                //         child: Icon(Icons.add),
-                //         onPressed: () {
-                //           _counterProduct++;
-                //         }
-                //         ),
-                //   ],
-                // ),
+                Image(
+                  fit: BoxFit.fitHeight,
+                     image: NetworkImage(products.elementAt(index).image.imageUrl),),
+                Text(products.elementAt(index).name, style: TextStyle(color: Colors.black),),
+                Text(products.elementAt(index).description, style: TextStyle(color: Colors.black),),
+                Text(products.elementAt(index).bookPrice.toString(), style: TextStyle(color: Colors.black),),
+                Text(products.elementAt(index).productType, style: TextStyle(color: Colors.black),),
+                Text(products.elementAt(index).stock.toString(), style: TextStyle(color: Colors.black),),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    _counterProduct!=0? new  IconButton(icon: new Icon(Icons.remove),onPressed: ()=>setState(()=>_counterProduct--),):new Container(),
+                    new Text(_counterProduct.toString()),
+                    new IconButton(icon: new Icon(Icons.add),onPressed: ()=>setState(()=>_counterProduct++))
+                  ],
+                ),
                 ElevatedButton(
                     onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (context){
+                            return AlertDialog(
+
+                              content: Text("Desea añadir " + _counterProduct.toString() + " " + products.elementAt(index).name+""),
+                              actions: [
+                                ElevatedButton(
+                                    onPressed: () {
+
+                                      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => BookConfirmation()));
+                                    },
+                                    child: Text("Si")
+                                ),
+                                ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text("No")
+                                ),
+                              ],
+                            );
+                          }
+                      );
 
                     },
                     child: Text("Añadir", style: TextStyle(color: Colors.black),)
                 ),
               ],
-            ));
-      }
-    } else{
-      showList.add(Container(child: Text("No existen productos alquilables de este tipo", style: TextStyle(color: Colors.black),),));
-    }
+            );
+        }
+    );
 
-    return showList;
+    return showProduct;
   }
 
   Future<List<Product>> getBookableProduct(String type) async {

@@ -19,6 +19,7 @@ class BookConfirmation extends StatefulWidget {
   final String date;
   final BookDate hour;
   final Court court;
+  
 
   const BookConfirmation({Key key, this.date, this.hour, this.court}) : super(key: key);
 
