@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:yourcourt/src/Screens/bookingScreen/ProductBooking.dart';
 import 'package:yourcourt/src/Utiles/cabeceras.dart';
 import 'package:yourcourt/src/Utiles/principal_structure.dart';
 import 'package:yourcourt/src/Utiles/menu.dart';
@@ -52,7 +53,6 @@ class _BookConfirmationState extends State<BookConfirmation> {
   Widget show = Container(
     child: Text("Prueba ")
   );
-  bool _search = false;
 
   Widget body() {
     return Column(
@@ -62,56 +62,8 @@ class _BookConfirmationState extends State<BookConfirmation> {
           style: TextStyle(color: Colors.black),),
         ElevatedButton(
           onPressed: (){
-            showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    title: Text("Alquilar productos", style: TextStyle(color: Colors.black),),
-                    content: Container(
-                      width: double.maxFinite,
-                      child: FutureBuilder(
-                        future: getProductTypes(),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData){
-                            return Column(
-                                children: [
-                                  DropdownButtonFormField(
-                                    onChanged: (dynamic value) {
-                                      setState(() {
-                                        _productType = value;
-                                      });
-                                    },
-                                    value: _productType,
-                                    hint: Text("Elige un tipo de producto",),
-                                    items: snapshot.data.map<DropdownMenuItem<String>>((String item) {
-                                        return DropdownMenuItem<String>(
-                                          value: item,
-                                          child: new Text(item),
-                                        );
-                                      }).toList(),
-                                  ),
-                                  ShowBookableProducts(_productType),
-                                ]
-                            );
-                          } else{
-                            return Container(
-                              child: Text("No se encuentra disponible esta operación", style: TextStyle(color: Colors.black),),
-                            );
-                          }
-                        },
-                      ),
-                    ),
-                    actions: [
-                      ElevatedButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: Text("Cerrar", style: TextStyle(color: Colors.black),)),
-
-                    ],
-                  );
-                }
-            );
+            //Un stateFul widget que realice las operaciones de alquilar los productos
+            Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ProductBooking()));
           },
           child: Text("Alquilar productos", style: TextStyle(color: Colors.black),),
         ),
@@ -179,145 +131,4 @@ class _BookConfirmationState extends State<BookConfirmation> {
 
   }
 
-  Future<List<String>> getProductTypes() async {
-    List<String> productTypes = [];
-    var jsonResponse;
-
-    var response = await http.get("https://dev-yourcourt-api.herokuapp.com/products/productTypes");
-    if (response.statusCode==200){
-      jsonResponse = json.decode(response.body);
-    }
-    for (var item in jsonResponse) {
-      productTypes.add(item["typeName"]);
-    }
-    return productTypes;
-  }
-
-  List<DropdownMenuItem<String>> dropMenuItems(List<String> data) {
-    List<DropdownMenuItem<String>> dropMenuItems = [];
-    for (var item in data) {
-      dropMenuItems.add(DropdownMenuItem(
-          value: item,
-          child: Text(item, style: TextStyle(color: Colors.black),)
-      ));
-    }
-    return dropMenuItems;
-  }
-
-  // Future<List<Product>> getBookableProduct(String type) async {
-  //   List<Product> products = [];
-  //   var jsonResponse;
-  //
-  //   var response = await http.get("https://dev-yourcourt-api.herokuapp.com/products/bookableProductsByType?typeName="+type);
-  //   if (response.statusCode==200){
-  //     jsonResponse = json.decode(response.body);
-  //     for (var item in jsonResponse) {
-  //       products.add(Product.fromJson(item));
-  //     }
-  //   }
-  //   return products;
-  //
-  // }
-  //
-  // // Widget showBookableProducts(Product product) {
-  // //   return new Image(
-  // //     image: NetworkImage(product.image.imageUrl),);
-  // // }
-  //
-  // List<Widget> showBookableProducts(List<Product> products) {
-  //   List<Widget> showList = [];
-  //
-  //   if(products!=null){
-  //     for (var product in products) {
-  //       showList.add(ListView(
-  //         children: [
-  //           Image(
-  //             image: NetworkImage(product.image.imageUrl),),
-  //           Text(product.name),
-  //           Text(product.description),
-  //           Text(product.bookPrice.toString()),
-  //           Text(product.productType),
-  //           Text(product.stock.toString()),
-  //         ],
-  //       ));
-  //     }
-  //   } else{
-  //     showList.add(Container(child: Text("No existen productos alquilables de este tipo"),));
-  //   }
-  //
-  //   return showList;
-  // }
-}
-
-class ShowBookableProducts extends StatelessWidget {
-  final String productType;
-
-  ShowBookableProducts(this.productType);
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: getBookableProduct(productType),
-        builder: (context, snapshot){
-          if(snapshot.hasData){
-            return Expanded(
-              child: GridView.count(
-                  crossAxisCount: 2,
-                  children: showBookableProducts(snapshot.data)
-              ),
-            );
-          } else {
-            return Container(child: Text("No hay productos alquilables"),);
-          }
-        });
-  }
-
-  Future<List<Product>> getBookableProduct(String type) async {
-    List<Product> products = [];
-    var jsonResponse;
-
-    var response = await http.get("https://dev-yourcourt-api.herokuapp.com/products/bookableProductsByType?typeName="+type);
-    if (response.statusCode==200){
-      jsonResponse = json.decode(response.body);
-      for (var item in jsonResponse) {
-        products.add(Product.fromJson(item));
-      }
-    }
-    return products;
-
-  }
-
-  // Widget showBookableProducts(Product product) {
-  //   return new Image(
-  //     image: NetworkImage(product.image.imageUrl),);
-  // }
-
-  List<Widget> showBookableProducts(List<Product> products) {
-    List<Widget> showList = [];
-
-    if(products!=null){
-      for (var product in products) {
-        showList.add(ListView(
-          children: [
-            Image(
-              image: NetworkImage(product.image.imageUrl),),
-            Text(product.name, style: TextStyle(color: Colors.black),),
-            Text(product.description, style: TextStyle(color: Colors.black),),
-            Text(product.bookPrice.toString(), style: TextStyle(color: Colors.black),),
-            Text(product.productType, style: TextStyle(color: Colors.black),),
-            Text(product.stock.toString(), style: TextStyle(color: Colors.black),),
-            ElevatedButton(
-                onPressed: () {
-                },
-                child: Text("Añadir", style: TextStyle(color: Colors.black),)
-            ),
-          ],
-        ));
-      }
-    } else{
-      showList.add(Container(child: Text("No existen productos alquilables de este tipo", style: TextStyle(color: Colors.black),),));
-    }
-
-    return showList;
-  }
 }

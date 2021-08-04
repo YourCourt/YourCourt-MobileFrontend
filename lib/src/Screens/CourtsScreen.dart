@@ -7,10 +7,8 @@ import 'package:yourcourt/src/Utiles/principal_structure.dart';
 import 'package:yourcourt/src/Utiles/menu.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/Court.dart';
-import '../models/ImageOf.dart';
 import 'bookingScreen/BookingScreen.dart';
 import 'login/LoginPage.dart';
-import 'PerfilScreen.dart';
 
 class CourtsPage extends StatefulWidget {
 
@@ -115,7 +113,6 @@ class _CourtsPageState extends State<CourtsPage> {
 
       courts.add(Court.fromJson(item));
     }
-    print("Pistas: ${courts}");
     return courts;
   }
 
