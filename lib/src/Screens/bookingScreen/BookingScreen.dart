@@ -113,7 +113,7 @@ class SeleccionaHora extends StatelessWidget {
   BookDate _selectedHour;
 
   List<BookDate> possibiltyHours = [
-    BookDate('8:30', '10:00'),
+    BookDate('08:30', '10:00'),
     BookDate('10:00', '11:00'),
     BookDate('11:00', '12:00'),
     BookDate('12:00', '13:00'),

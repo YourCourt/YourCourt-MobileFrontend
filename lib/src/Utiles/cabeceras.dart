@@ -9,7 +9,9 @@ Widget appHeadboard(BuildContext context, SharedPreferences sharedPreferences) {
     actions: <Widget>[
       TextButton(
         onPressed: () {
-          sharedPreferences.clear();
+          if(sharedPreferences!=null){
+            sharedPreferences.clear();
+          }
           Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => LoginPage()), (Route<dynamic> route) => false);
         },
         child: Text("Log Out", style: TextStyle(color: Colors.white)),

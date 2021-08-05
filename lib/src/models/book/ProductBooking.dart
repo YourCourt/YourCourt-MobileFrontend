@@ -11,11 +11,13 @@ class ProductBooking {
   });
 
   ProductBooking.fromJson(Map<String, dynamic> json){
+    List<ProductBookingLine> l = [];
     id = json["id"];
     bookingId = json["booking"];
     for (var line in json["lines"]){
-      lines.add(ProductBookingLine.fromJson(line));
+      l.add(ProductBookingLine.fromJson(line));
     }
+    lines = l;
 
   }
 }

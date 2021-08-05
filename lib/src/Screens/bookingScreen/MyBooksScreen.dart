@@ -50,7 +50,7 @@ class _MyBooksState extends State<MyBooks> {
             );
           } else {
             return Container(
-              child: Text("No disponible"),
+              child: Text("No hay ninguna reserva realizada"),
             );
           }
         }
@@ -58,10 +58,9 @@ class _MyBooksState extends State<MyBooks> {
   }
 
   Future<List<Book>> getBooks() async {
+    sharedPreferences = await SharedPreferences.getInstance();
 
     List<Book> books = [];
-
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
     var jsonResponse;
     var response = await http.get(
@@ -69,11 +68,13 @@ class _MyBooksState extends State<MyBooks> {
 
     if (response.statusCode == 200) {
       jsonResponse = json.decode(response.body);
-    }
-    for (var item in jsonResponse) {
 
-      books.add(Book.fromJson(item));
+      for (var item in jsonResponse) {
+
+        books.add(Book.fromJson(item));
+      }
     }
+
     print("Reservas: ${books}");
 
     return books;
@@ -93,12 +94,90 @@ class _MyBooksState extends State<MyBooks> {
                 Text("Termina: " + book.endDate, style: TextStyle(color: Colors.black),),
                 Text("Productos: " + book.productBooking.lines.toString(), style: TextStyle(color: Colors.black),),
                 Text("Precio final: " + book.productBookingSum.toString(), style: TextStyle(color: Colors.black),),
+                Row(
+                  children: [
+                    ElevatedButton(
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (context){
+                                return AlertDialog(
+                                  content: Text("¿Desea eliminar la reserva?"),
+                                  actions: [
+                                    ElevatedButton(
+                                        onPressed: () {
+                                          eliminarReserva(book);
+                                          setState(() {
+                                            Navigator.pop(context);
+                                          });
+                                        },
+                                        child: Text("Si")
+                                    ),
+                                    ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text("No")
+                                    ),
+                                  ],
+                                );
+                              }
+                          );
+
+                        },
+                        child: Text("Eliminar reserva", style: TextStyle(color: Colors.white),),
+                    ),
+
+                  ],
+                )
               ],
             ),
           ))
       ;
     }
     return books;
+
+  }
+
+  eliminarReserva(Book book) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+    if(getUserId(sharedPreferences.getString("username")) != book.userId || sharedPreferences.getStringList("roles").contains("ROLE_ADMIN")==true){
+
+      var response = await http.delete("https://dev-yourcourt-api.herokuapp.com/bookings/" + book.id.toString());
+
+      if(response.statusCode==200){
+        print("Reserva eliminada");
+      } else{
+        print(response.statusCode);
+      }
+    } else{
+      print("No puede eliminar una reserva que no le pertenece");
+    }
+
+
+  }
+
+  getUserId(String username) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    int userId;
+
+    var jsonResponse;
+    var response = await http.get(
+        "https://dev-yourcourt-api.herokuapp.com/users/username/"+username,
+        headers: {
+          "Accept": "application/json",
+          "Content-type": "application/json"
+        });
+
+    if (response.statusCode == 200) {
+      jsonResponse = json.decode(response.body);
+    }
+
+    userId = jsonResponse["id"];
+    sharedPreferences.setInt("id", userId);
+
+    return userId;
 
   }
 }

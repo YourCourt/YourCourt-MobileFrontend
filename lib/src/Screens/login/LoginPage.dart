@@ -63,6 +63,7 @@ class _LoginPageState extends State<LoginPage> {
         });
         sharedPreferences.setString("token", jsonResponse['token']);
         sharedPreferences.setString("username", username);
+        sharedPreferences.setStringList("roles", jsonResponse['authorities']["authority"]);
 
         print("Username: ${sharedPreferences.get("username")}");
         Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) =>   MainPage()), (Route<dynamic> route) => false);

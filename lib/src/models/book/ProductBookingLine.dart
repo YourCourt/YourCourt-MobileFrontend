@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 class ProductBookingLine {
-  int discount;
+  double discount;
   int productId;
   int quantity;
 
