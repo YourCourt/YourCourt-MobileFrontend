@@ -1,12 +1,18 @@
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:yourcourt/src/Menu.dart';
-import 'package:yourcourt/src/Screens/LoginPage.dart';
+import 'package:yourcourt/src/Utiles/cabeceras.dart';
+import 'package:yourcourt/src/Utiles/menu.dart';
+import 'package:yourcourt/src/Screens/login/LoginPage.dart';
+import 'package:yourcourt/src/Screens/PerfilScreen.dart';
+import 'package:yourcourt/src/Utiles/principal_structure.dart';
 
 void main() => runApp(MyApp());
 
+
 class MyApp extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -44,22 +50,11 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("YourCourt", style: TextStyle(color: Colors.white)),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              sharedPreferences.clear();
-              Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => LoginPage()), (Route<dynamic> route) => false);
-            },
-            child: Text("Log Out", style: TextStyle(color: Colors.white)),
-          ),
-        ],
-      ),
-      body: Center(child: Text("Main Page")),
-      drawer: MenuLateral(),
-    );
+    return Principal(context, sharedPreferences, appHeadboard(context, sharedPreferences), body(), MenuLateral());
+  }
+
+  Widget body() {
+     return Center(child: Text("Main Page"));
   }
 
 
