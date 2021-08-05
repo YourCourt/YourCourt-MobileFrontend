@@ -2,17 +2,28 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:yourcourt/src/Screens/login/LoginPage.dart';
 import 'package:yourcourt/src/Utiles/cabeceras.dart';
 import 'package:yourcourt/src/Utiles/menu.dart';
 import 'package:yourcourt/src/Utiles/principal_structure.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:yourcourt/src/models/Court.dart';
+import 'package:yourcourt/src/models/book/BookingDate.dart';
+import 'package:yourcourt/src/models/book/ProductBookCuantity.dart';
+import 'package:yourcourt/src/models/book/ProductBookingLine.dart';
 import 'package:yourcourt/src/models/product/Product.dart';
 import 'package:http/http.dart' as http;
 
 import 'BookConfirmationScreen.dart';
 
 class ProductBooking extends StatefulWidget {
+
+  final String date;
+  final BookDate hour;
+  final Court court;
+
+  const ProductBooking({Key key, this.date, this.hour, this.court}) : super(key: key);
 
   @override
   _ProductBookingState createState() => _ProductBookingState();
@@ -39,8 +50,10 @@ class _ProductBookingState extends State<ProductBooking> {
     return Principal(context, sharedPreferences, appHeadboard(context, sharedPreferences), body(), MenuLateral());
 
   }
-
-  String _productType = "Textil";
+  int stockLimit = 20;
+  List<ProductBookingLine> productsBooking = [];
+  int _counterProduct = 0;
+  String _productType = "Raqueta";
 
   Widget body() {
     return FutureBuilder(
@@ -89,7 +102,13 @@ class _ProductBookingState extends State<ProductBooking> {
               return GridView.count(
                     crossAxisCount: 2,
                     children: [
-                          showBookableProducts(snapshot.data),
+                      showBookableProducts(snapshot.data),
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => BookConfirmation(date: widget.date, court: widget.court, hour: widget.hour, productsBooking: productsBooking,)));
+                          },
+                          child: Text("Confirmar", style: TextStyle(color: Colors.white),)
+                      )
                     ]
                 );
             } else {
@@ -101,7 +120,6 @@ class _ProductBookingState extends State<ProductBooking> {
     return Container();
   }
 
-  int _counterProduct = 0;
   Widget showBookableProducts(List<Product> products) {
 
     Widget showProduct = ListView.builder(
@@ -129,30 +147,56 @@ class _ProductBookingState extends State<ProductBooking> {
                 ),
                 ElevatedButton(
                     onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (context){
-                            return AlertDialog(
+                      if(products.elementAt(index).stock - _counterProduct<= stockLimit){
+                        if(_counterProduct!=0){
+                          showDialog(
+                              context: context,
+                              builder: (context){
+                                return AlertDialog(
+                                  content: Text("Desea añadir " + _counterProduct.toString() + " " + products.elementAt(index).name+""),
+                                  actions: [
+                                    ElevatedButton(
+                                        onPressed: () {
+                                          productsBooking.add(ProductBookingLine(discount: 0,productId:products.elementAt(index).id, quantity: _counterProduct ));
+                                          Navigator.pop(context);
+                                          _counterProduct=0;
+                                        },
+                                        child: Text("Si")
+                                    ),
+                                    ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text("No")
+                                    ),
+                                  ],
+                                );
+                              }
+                          );
+                        }
+                        else{
+                          Fluttertoast.showToast(
+                              msg: "No se puede alquilar 0 productos",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.CENTER,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: Colors.red,
+                              textColor: Colors.white,
+                              fontSize: 16.0
+                          );
+                        }
+                      } else {
+                        Fluttertoast.showToast(
+                            msg: "No puede alquilar " + _counterProduct.toString()+ " " + products.elementAt(index).name + "debido al stock bajo",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.CENTER,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor: Colors.red,
+                            textColor: Colors.white,
+                            fontSize: 16.0
+                        );
+                      }
 
-                              content: Text("Desea añadir " + _counterProduct.toString() + " " + products.elementAt(index).name+""),
-                              actions: [
-                                ElevatedButton(
-                                    onPressed: () {
-
-                                      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => BookConfirmation()));
-                                    },
-                                    child: Text("Si")
-                                ),
-                                ElevatedButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                    child: Text("No")
-                                ),
-                              ],
-                            );
-                          }
-                      );
 
                     },
                     child: Text("Añadir", style: TextStyle(color: Colors.black),)
@@ -163,6 +207,10 @@ class _ProductBookingState extends State<ProductBooking> {
     );
 
     return showProduct;
+  }
+
+  ShowBookProducts(List<ProductBookCuantity> products){
+
   }
 
   Future<List<Product>> getBookableProduct(String type) async {
