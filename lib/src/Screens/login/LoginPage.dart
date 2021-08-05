@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yourcourt/src/Utiles/already_have_an_account_check.dart';
+import 'package:yourcourt/src/models/user/Authority.dart';
 import '../../../main.dart';
 import 'SignUpPage.dart';
 
@@ -63,9 +64,14 @@ class _LoginPageState extends State<LoginPage> {
         });
         sharedPreferences.setString("token", jsonResponse['token']);
         sharedPreferences.setString("username", username);
-        sharedPreferences.setStringList("roles", jsonResponse['authorities']["authority"]);
+        List<String> authorities = [];
 
-        print("Username: ${sharedPreferences.get("username")}");
+        for(var item in jsonResponse['authorities']){
+          authorities.add(item['authority']);
+        }
+        sharedPreferences.setStringList("roles", authorities);
+
+        print("Roles: ${sharedPreferences.getStringList("roles")}");
         Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) =>   MainPage()), (Route<dynamic> route) => false);
 
       }
