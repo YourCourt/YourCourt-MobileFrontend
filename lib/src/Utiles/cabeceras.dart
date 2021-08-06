@@ -1,5 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
+import 'package:yourcourt/src/Screens/ShoppingPurchaseProductScreen.dart';
 import 'package:yourcourt/src/Screens/login/LoginPage.dart';
 import 'package:yourcourt/src/Screens/PerfilScreen.dart';
 
@@ -21,6 +22,12 @@ Widget appHeadboard(BuildContext context, SharedPreferences sharedPreferences) {
           Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => MyProfile()), (Route<dynamic> route) => false);
         },
         child: Text("Mi perfil", style: TextStyle(color: Colors.white)),
+      ),
+      IconButton(
+        onPressed: () {
+          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => ShoppingPurchaseProducts()), (Route<dynamic> route) => false);
+        },
+        icon: Icon(Icons.shopping_cart_rounded),
       ),
     ],
   );
