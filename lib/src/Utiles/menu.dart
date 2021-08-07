@@ -140,7 +140,7 @@ class _ListaDatosDeUsuario extends StatelessWidget {
               "Productos", style: TextStyle(color: Colors.white),),
             onPressed: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => MainPage()));
+                  MaterialPageRoute(builder: (context) => Products()));
             }
         ),
         ElevatedButton(
@@ -153,10 +153,10 @@ class _ListaDatosDeUsuario extends StatelessWidget {
         ),
         ElevatedButton(
             child: Text(
-              "Productos", style: TextStyle(color: Colors.white),),
+              "Mis transacciones", style: TextStyle(color: Colors.white),),
             onPressed: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => Products()));
+                  MaterialPageRoute(builder: (context) => MainPage()));
             }
         ),
       ],

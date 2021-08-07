@@ -13,6 +13,7 @@ import 'package:yourcourt/src/models/dto/ProductPurchaseDto.dart';
 import 'package:yourcourt/src/models/dto/ProductPurchaseLineDto.dart';
 import 'package:gson/gson.dart';
 
+import '../vars.dart';
 import 'login/LoginPage.dart';
 
 class Products extends StatefulWidget {
@@ -50,7 +51,6 @@ class _ProductsState extends State<Products> {
   int _stockLimit = 20;
 
   Widget body() {
-
     return FutureBuilder(
       future: getProductTypes(),
       builder: (context, snapshot) {
@@ -112,9 +112,6 @@ class _ProductsState extends State<Products> {
     return Container();
   }
 
-  List<ProductPurchaseLineDto> productPurchaseLines = [];
-  ProductPurchaseDto productPurchase;
-
 
   Widget showProductsByType(List<Product> products) {
     Widget showProduct = ListView.builder(
@@ -138,7 +135,7 @@ class _ProductsState extends State<Products> {
                   .description, style: TextStyle(color: Colors.black),),
               Text(products
                   .elementAt(index)
-                  .bookPrice
+                  .price
                   .toString(), style: TextStyle(color: Colors.black),),
               Text(products
                   .elementAt(index)
@@ -196,7 +193,7 @@ class _ProductsState extends State<Products> {
                                               productPurchaseLines.add(ProductPurchaseLineDto(productId:products
                                                   .elementAt(index).id, quantity: _productCounter, discount: 0 ));
                                               setState(() {
-                                                // sharedPreferences.setString("carrito", Gson().encode(ProductPurchaseDto(lines: productPurchaseLines, userId: snapshot.data)));
+
                                                 _productCounter = 0;
                                                 Navigator.pop(context);
                                               });
