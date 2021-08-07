@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:yourcourt/src/Utiles/cabeceras.dart';
 import 'package:yourcourt/src/Utiles/menu.dart';
 import 'package:yourcourt/src/Utiles/principal_structure.dart';
-import 'package:yourcourt/src/models/book/Book.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:yourcourt/src/models/Book.dart';
 
 import '../login/LoginPage.dart';
 
@@ -75,8 +75,6 @@ class _MyBooksState extends State<MyBooks> {
       }
     }
 
-    print("Reservas: ${books}");
-
     return books;
   }
 
@@ -85,28 +83,43 @@ class _MyBooksState extends State<MyBooks> {
     List<Widget> books = [];
 
     for (var book in data){
-      books.add(
+      if(DateTime.now().isAfter(DateTime.parse(book.startDate))){
+        books.add(
           Container(
-            padding: const EdgeInsets.all(8),
-            child: Column(
-              children: [
-                Text("Empieza: " + book.startDate, style: TextStyle(color: Colors.black),),
-                Text("Termina: " + book.endDate, style: TextStyle(color: Colors.black),),
-                Text("Productos: " + book.productBooking.lines.toString(), style: TextStyle(color: Colors.black),),
-                Text("Precio final: " + book.productBookingSum.toString(), style: TextStyle(color: Colors.black),),
-                Row(
-                  children: [
-                    ElevatedButton(
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                children: [
+                  Text("Empieza: " + book.startDate, style: TextStyle(color: Colors.black),),
+                  Text("Termina: " + book.endDate, style: TextStyle(color: Colors.black),),
+                  Text("Productos: " + book.productBooking.lines.toString(), style: TextStyle(color: Colors.black),),
+                  Text("Precio final: " + book.productBookingSum.toString(), style: TextStyle(color: Colors.black),),
+                ]
+              ),
+          ));
+      }
+      else {
+        books.add(
+            Container(
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                children: [
+                  Text("Empieza: " + book.startDate, style: TextStyle(color: Colors.black),),
+                  Text("Termina: " + book.endDate, style: TextStyle(color: Colors.black),),
+                  Text("Productos: " + book.productBooking.lines.toString(), style: TextStyle(color: Colors.black),),
+                  Text("Precio final: " + book.productBookingSum.toString(), style: TextStyle(color: Colors.black),),
+                  Row(
+                    children: [
+                      ElevatedButton(
                         onPressed: () {
                           showDialog(
                               context: context,
                               builder: (context){
                                 return AlertDialog(
-                                  content: Text("¿Desea eliminar la reserva?"),
+                                  content: Text("¿Desea cancelar la reserva?"),
                                   actions: [
                                     ElevatedButton(
                                         onPressed: () {
-                                          eliminarReserva(book);
+                                          deleteBook(book);
                                           setState(() {
                                             Navigator.pop(context);
                                           });
@@ -125,36 +138,41 @@ class _MyBooksState extends State<MyBooks> {
                           );
 
                         },
-                        child: Text("Eliminar reserva", style: TextStyle(color: Colors.white),),
-                    ),
+                        child: Text("Cancelar reserva", style: TextStyle(color: Colors.white),),
+                      ),
 
-                  ],
-                )
-              ],
-            ),
-          ))
-      ;
+                    ],
+                  )
+                ],
+              ),
+            ));
+    }
+
     }
     return books;
 
   }
 
-  eliminarReserva(Book book) async {
+  deleteBook(Book book) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
-    if(getUserId(sharedPreferences.getString("username")) != book.userId || sharedPreferences.getStringList("roles").contains("ROLE_ADMIN")==true){
+    if(DateTime.now().isBefore(DateTime.parse(book.startDate))){
+      if(getUserId(sharedPreferences.getString("username")) != book.userId || sharedPreferences.getStringList("roles").contains("ROLE_ADMIN")==true){
 
-      var response = await http.delete("https://dev-yourcourt-api.herokuapp.com/bookings/" + book.id.toString());
+        var response = await http.delete("https://dev-yourcourt-api.herokuapp.com/bookings/" + book.id.toString());
 
-      if(response.statusCode==200){
-        print("Reserva eliminada");
+        if(response.statusCode==200){
+          print("Reserva cancelada");
+        } else{
+
+          print(response.statusCode);
+        }
       } else{
-        print(response.statusCode);
+        print("No puede cancelar una reserva que no le pertenece");
       }
     } else{
-      print("No puede eliminar una reserva que no le pertenece");
+      print("No puede cancelar una reserva que ha caducado");
     }
-
 
   }
 

@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:yourcourt/src/Utiles/cabeceras.dart';
 import 'package:yourcourt/src/Utiles/principal_structure.dart';
 import 'package:yourcourt/src/Utiles/menu.dart';
-import 'package:yourcourt/src/models/book/BookingDate.dart';
+import 'package:yourcourt/src/models/BookingDate.dart';
 import 'package:yourcourt/src/models/Court.dart';
 import 'package:http/http.dart' as http;
 
@@ -177,8 +177,6 @@ class SeleccionaHora extends StatelessWidget {
     print(DateTime.now());
     if(DateTime.now().toString().contains(date)){
       availableHours.removeWhere((element) => getDoubleNumber(element.startHour)<DateTime.now().hour.toDouble());
-      print(getDoubleNumber("17:00"));
-      print(DateTime.now().hour.toDouble());
     }
 
     var jsonResponse;

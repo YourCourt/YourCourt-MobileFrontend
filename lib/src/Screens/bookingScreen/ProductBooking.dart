@@ -9,11 +9,10 @@ import 'package:yourcourt/src/Utiles/menu.dart';
 import 'package:yourcourt/src/Utiles/principal_structure.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yourcourt/src/models/Court.dart';
-import 'package:yourcourt/src/models/book/BookingDate.dart';
-import 'package:yourcourt/src/models/book/ProductBookCuantity.dart';
-import 'package:yourcourt/src/models/book/ProductBookingLine.dart';
-import 'package:yourcourt/src/models/product/Product.dart';
+import 'package:yourcourt/src/models/BookingDate.dart';
+import 'package:yourcourt/src/models/Product.dart';
 import 'package:http/http.dart' as http;
+import 'package:yourcourt/src/models/ProductBookingLine.dart';
 
 import 'BookConfirmationScreen.dart';
 
@@ -207,10 +206,6 @@ class _ProductBookingState extends State<ProductBooking> {
     );
 
     return showProduct;
-  }
-
-  ShowBookProducts(List<ProductBookCuantity> products){
-
   }
 
   Future<List<Product>> getBookableProduct(String type) async {

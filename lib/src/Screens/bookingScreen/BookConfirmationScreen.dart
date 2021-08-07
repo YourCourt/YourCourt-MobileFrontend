@@ -8,11 +8,11 @@ import 'package:yourcourt/src/Utiles/cabeceras.dart';
 import 'package:yourcourt/src/Utiles/principal_structure.dart';
 import 'package:yourcourt/src/Utiles/menu.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:yourcourt/src/models/book/BookingDate.dart';
+import 'package:yourcourt/src/models/BookingDate.dart';
 import 'package:yourcourt/src/models/Court.dart';
 import 'package:http/http.dart' as http;
-import 'package:yourcourt/src/models/book/ProductBookingLine.dart';
-import 'package:yourcourt/src/models/product/Product.dart';
+import 'package:yourcourt/src/models/Product.dart';
+import 'package:yourcourt/src/models/ProductBookingLine.dart';
 
 import '../login/LoginPage.dart';
 
@@ -87,29 +87,6 @@ class _BookConfirmationState extends State<BookConfirmation> {
     );
   }
 
-  getUserId(String username) async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    int userId;
-
-    var jsonResponse;
-    var response = await http.get(
-        "https://dev-yourcourt-api.herokuapp.com/users/username/"+username,
-        headers: {
-          "Accept": "application/json",
-          "Content-type": "application/json"
-        });
-
-    if (response.statusCode == 200) {
-      jsonResponse = json.decode(response.body);
-    }
-
-    userId = jsonResponse["id"];
-    sharedPreferences.setInt("id", userId);
-
-    return userId;
-
-  }
-
 
   List<Map<String, dynamic>> productsBookingToJson(List<ProductBookingLine> productsBooking) {
     List<Map<String, dynamic>> productsBookingToJson = [];
@@ -122,8 +99,6 @@ class _BookConfirmationState extends State<BookConfirmation> {
 
   confirmBook() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String username = sharedPreferences.getString("username");
-    getUserId(username);
 
     Map data = {};
 
@@ -146,8 +121,6 @@ class _BookConfirmationState extends State<BookConfirmation> {
       };
     }
 
-    print(data);
-
     var response = await http.post(
         "https://dev-yourcourt-api.herokuapp.com/bookings",
         body: json.encode(data),
@@ -156,10 +129,11 @@ class _BookConfirmationState extends State<BookConfirmation> {
           "Content-type": "application/json"
         });
 
-    print(response.statusCode);
-
     if (response.statusCode == 201) {
       print("Reserva creada");
+    } else{
+      print(data);
+      print(response.statusCode);
     }
 
   }
