@@ -2,7 +2,7 @@
 
 import 'ProductPurchaseLine.dart';
 
-class ProductPurchaseDto {
+class ProductPurchase {
 
   int id;
   List<ProductPurchaseLine> lines;
@@ -10,14 +10,14 @@ class ProductPurchaseDto {
   String creationDate;
   double productPurchaseSum;
 
-  ProductPurchaseDto({
+  ProductPurchase({
     this.id,
     this.userId,
     this.lines,
     this.productPurchaseSum,
   });
 
-  ProductPurchaseDto.fromJson(Map<String, dynamic> json){
+  ProductPurchase.fromJson(Map<String, dynamic> json){
     id = json["id"];
     List<ProductPurchaseLine> l = [];
     for (var item in json["lines"]) {

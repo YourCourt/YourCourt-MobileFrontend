@@ -177,8 +177,6 @@ class SeleccionaHora extends StatelessWidget {
     print(DateTime.now());
     if(DateTime.now().toString().contains(date)){
       availableHours.removeWhere((element) => getDoubleNumber(element.startHour)<DateTime.now().hour.toDouble());
-      print(getDoubleNumber("17:00"));
-      print(DateTime.now().hour.toDouble());
     }
 
     var jsonResponse;

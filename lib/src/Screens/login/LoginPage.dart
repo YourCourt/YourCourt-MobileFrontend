@@ -64,6 +64,7 @@ class _LoginPageState extends State<LoginPage> {
         });
         sharedPreferences.setString("token", jsonResponse['token']);
         sharedPreferences.setString("username", username);
+        setUserId(username);
         List<String> authorities = [];
 
         for(var item in jsonResponse['authorities']){
@@ -82,6 +83,27 @@ class _LoginPageState extends State<LoginPage> {
       });
       print(response.body);
     }
+  }
+
+  setUserId(String username) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    int userId;
+
+    var jsonResponse;
+    var response = await http.get(
+        "https://dev-yourcourt-api.herokuapp.com/users/username/"+username,
+        headers: {
+          "Accept": "application/json",
+          "Content-type": "application/json"
+        });
+
+    if (response.statusCode == 200) {
+      jsonResponse = json.decode(response.body);
+    }
+
+    userId = jsonResponse["id"];
+    sharedPreferences.setInt("id", userId);
+
   }
 
   Container registerSection() {

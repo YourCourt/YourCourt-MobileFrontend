@@ -15,6 +15,7 @@ Widget appHeadboard(BuildContext context, SharedPreferences sharedPreferences) {
           if(sharedPreferences!=null){
             sharedPreferences.clear();
           }
+          productPurchaseLines = [];
           Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => LoginPage()), (Route<dynamic> route) => false);
         },
         child: Text("Log Out", style: TextStyle(color: Colors.white)),

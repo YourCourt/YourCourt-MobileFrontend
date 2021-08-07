@@ -6,6 +6,7 @@ import 'package:yourcourt/src/Utiles/principal_structure.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yourcourt/src/models/Product.dart';
 import 'package:http/http.dart' as http;
+import 'package:yourcourt/src/models/dto/ProductPurchaseDto.dart';
 import 'package:yourcourt/src/models/dto/ProductPurchaseLineDto.dart';
 import 'package:yourcourt/src/vars.dart';
 import 'login/LoginPage.dart';
@@ -40,12 +41,54 @@ class _ShoppingPurchaseProductsState extends State<ShoppingPurchaseProducts> {
   }
 
   Widget body(){
-    return GridView.count(
-        crossAxisCount: 2,
-        children: [
-          showProductLines(productPurchaseLines),
-        ]
-    );
+    if(productPurchaseLines.length>0){
+      return GridView.count(
+          crossAxisCount: 2,
+          children: [
+            showProductLines(productPurchaseLines),
+            Row(
+              children: [
+                ElevatedButton(
+                    onPressed: (){
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              content: Text("¿Desea finalizar la compra?"),
+                              actions: [
+                                ElevatedButton(
+                                    onPressed: (){
+                                      //Aquí hay que hacer la peticion de la compra
+                                      confirmPurchase(productPurchaseLines);
+                                      setState(() {
+                                        productPurchaseLines=[];
+                                        Navigator.pop(context);
+                                      });
+                                    },
+                                    child: Text("Si")
+                                ),
+                                ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text("No")
+                                ),
+                              ],
+                            );
+                          }
+                      );
+
+                    },
+                    child: Text("Confirmar compra", style: TextStyle(color: Colors.white),)
+                )
+              ],
+            )
+          ]
+      );
+    } else {
+      return Container();
+    }
+
   }
 
   Future<Product> getProduct(int id) async {
@@ -134,6 +177,30 @@ class _ShoppingPurchaseProductsState extends State<ShoppingPurchaseProducts> {
     );
   }
 
+  confirmPurchase(List<ProductPurchaseLineDto> productsToPurchase) async {
 
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+    int userId = sharedPreferences.getInt("id");
+
+    ProductPurchaseDto productsPurchase = ProductPurchaseDto(userId: userId, lines: productsToPurchase);
+    Map data = productsPurchase.toJson();
+    print(data);
+
+    var response = await http.post(
+        "https://dev-yourcourt-api.herokuapp.com/purchases",
+        body: json.encode(data),
+        headers: {
+          "Accept": "application/json",
+          "Content-type": "application/json"
+        });
+
+    if (response.statusCode == 201) {
+      print("Compra realizada");
+    } else{
+      print(response.statusCode);
+    }
+
+  }
 
 }

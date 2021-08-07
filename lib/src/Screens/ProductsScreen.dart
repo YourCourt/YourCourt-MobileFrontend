@@ -184,11 +184,7 @@ class _ProductsState extends State<Products> {
                                   .elementAt(index)
                                   .name + " al carrito?"),
                               actions: [
-                                FutureBuilder(
-                                    future: getUserId(sharedPreferences.getString("username")),
-                                    builder: (context, snapshot){
-                                      if(snapshot.connectionState==ConnectionState.done){
-                                        return ElevatedButton(
+                                ElevatedButton(
                                             onPressed: () {
                                               productPurchaseLines.add(ProductPurchaseLineDto(productId:products
                                                   .elementAt(index).id, quantity: _productCounter, discount: 0 ));
@@ -199,17 +195,7 @@ class _ProductsState extends State<Products> {
                                               });
                                             },
                                             child: Text("Si")
-                                        );
-                                      }
-                                      return ElevatedButton(
-                                          onPressed: (){
-
-                                          },
-                                          child: Text("Si")
-                                      );
-                                    }
-                                ),
-
+                                        ),
                                 ElevatedButton(
                                     onPressed: () {
                                       Navigator.pop(context);
@@ -273,28 +259,7 @@ class _ProductsState extends State<Products> {
     return products;
   }
 
-  getUserId(String username) async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    int userId;
 
-    var jsonResponse;
-    var response = await http.get(
-        "https://dev-yourcourt-api.herokuapp.com/users/username/"+username,
-        headers: {
-          "Accept": "application/json",
-          "Content-type": "application/json"
-        });
-
-    if (response.statusCode == 200) {
-      jsonResponse = json.decode(response.body);
-    }
-
-    userId = jsonResponse["id"];
-    sharedPreferences.setInt("id", userId);
-
-    return userId;
-
-  }
 
 
 
