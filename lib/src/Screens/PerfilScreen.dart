@@ -110,7 +110,6 @@ class _MyProfileState extends State<MyProfile> {
                   ),
                   SizedBox(height: 10.0),
                   TextFormField(
-                    key: GlobalKey(),
                     controller: emailController,
                     cursorColor: Colors.black,
                     style: TextStyle(color: Colors.black),

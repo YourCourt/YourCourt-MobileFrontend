@@ -22,7 +22,7 @@ Widget appHeadboard(BuildContext context, SharedPreferences sharedPreferences) {
       ),
       TextButton(
         onPressed: () {
-          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => MyProfile()), (Route<dynamic> route) => false);
+          Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => MyProfile()));
         },
         child: Text("Mi perfil", style: TextStyle(color: Colors.white)),
       ),
