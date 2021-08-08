@@ -14,13 +14,13 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  bool _isLoading = false;
 
   DateTime _dateTime;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.lightBlueAccent,
       appBar: AppBar(
         title: Text("Página de registro"),
@@ -38,13 +38,13 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
 
-  signUp(String username, password, email, phone, membershipNumber, DateTime fecha) async {
+  signUp(String username, password, email, phone, membershipNumber, DateTime date) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     Map data = {
       "email":email,
       "password":password,
       "username":username,
-      "birthDate":fecha.toString().substring(0,10),
+      "birthDate":date.toString().substring(0,10),
       "membershipNumber":membershipNumber,
       "phone":phone,
       "roles": [
@@ -64,9 +64,7 @@ class _SignUpPageState extends State<SignUpPage> {
     if (response.statusCode == 201) {
       jsonResponse = json.decode(response.body);
       if (jsonResponse != null) {
-        setState(() {
-          _isLoading = true;
-        });
+
         sharedPreferences.setString("token", jsonResponse['token']);
         sharedPreferences.setString("username", username);
         print("Username: ${sharedPreferences.get("username")}");
@@ -76,9 +74,7 @@ class _SignUpPageState extends State<SignUpPage> {
       }
     }
     else {
-      setState(() {
-        _isLoading = false;
-      });
+
       print(response.body);
     }
   }
@@ -215,9 +211,7 @@ class _SignUpPageState extends State<SignUpPage> {
         onPressed: usernameController.text == "" || passwordController.text == "" ||
             emailController.text == "" || phoneController.text == "" ||
             membershipController.text == "" || _dateTime == null ? null : () {
-          setState(() {
-            _isLoading = true;
-          });
+
           signUp(usernameController.text, passwordController.text , emailController.text,
               phoneController.text, membershipController.text, _dateTime);
         },

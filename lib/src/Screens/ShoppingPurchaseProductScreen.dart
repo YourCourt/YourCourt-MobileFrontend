@@ -187,10 +187,12 @@ class _ShoppingPurchaseProductsState extends State<ShoppingPurchaseProducts> {
     Map data = productsPurchase.toJson();
     print(data);
 
+    var token = sharedPreferences.getString("token");
     var response = await http.post(
         "https://dev-yourcourt-api.herokuapp.com/purchases",
         body: json.encode(data),
         headers: {
+          "Authorization": "Bearer ${token}",
           "Accept": "application/json",
           "Content-type": "application/json"
         });

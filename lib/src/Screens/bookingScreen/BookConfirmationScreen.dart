@@ -120,11 +120,12 @@ class _BookConfirmationState extends State<BookConfirmation> {
         "user": sharedPreferences.getInt("id"),
       };
     }
-
+    var token = sharedPreferences.getString("token");
     var response = await http.post(
         "https://dev-yourcourt-api.herokuapp.com/bookings",
         body: json.encode(data),
         headers: {
+          "Authorization": "Bearer ${token}",
           "Accept": "application/json",
           "Content-type": "application/json"
         });

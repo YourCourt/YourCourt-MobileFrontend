@@ -18,4 +18,15 @@ class User{
     this.imageUrl,
   });
 
+  User.fromJson(Map<String, dynamic> json){
+    id = json["id"];
+    username = json["username"];
+    email = json["email"];
+    creationDate = json["creationDate"];
+    birthDate = json["birthDate"];
+    membershipNumber = json["membershipNumber"];
+    phone = json["phone"];
+    imageUrl = json["imageUrl"];
+  }
+
 }
