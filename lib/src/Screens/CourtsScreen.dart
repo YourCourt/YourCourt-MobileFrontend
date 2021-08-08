@@ -67,7 +67,6 @@ class _CourtsPageState extends State<CourtsPage> {
             padding: const EdgeInsets.all(8),
             child: Column(
               children: [
-
                 GestureDetector(
                   child: Image(
                     image: NetworkImage(court.image.imageUrl),

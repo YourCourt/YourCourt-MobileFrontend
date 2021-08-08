@@ -18,6 +18,5 @@ class ProductBooking {
       l.add(ProductBookingLine.fromJson(line));
     }
     lines = l;
-
   }
 }

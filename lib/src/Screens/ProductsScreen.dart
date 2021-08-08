@@ -208,7 +208,7 @@ class _ProductsState extends State<Products> {
                       );
                     } else {
                         Fluttertoast.showToast(
-                            msg: "No se puede alquilar 0 productos",
+                            msg: "No se puede añadir 0 productos",
                             toastLength: Toast.LENGTH_SHORT,
                             gravity: ToastGravity.CENTER,
                             timeInSecForIosWeb: 1,

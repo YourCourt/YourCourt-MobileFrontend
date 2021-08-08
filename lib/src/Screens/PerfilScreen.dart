@@ -185,6 +185,7 @@ class _MyProfileState extends State<MyProfile> {
           setState(() {
             _isLoading = true;
           });
+          updateUser(emailController.text, phoneController.text);
           showDialog(
               context: context,
               builder: (context){
@@ -194,7 +195,6 @@ class _MyProfileState extends State<MyProfile> {
                     ElevatedButton(
                         onPressed: () {
                           setState(() {
-                            updateUser(emailController.text, phoneController.text);
                             Navigator.pop(context);
                           });
                         },
