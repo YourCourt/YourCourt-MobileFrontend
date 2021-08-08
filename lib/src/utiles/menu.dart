@@ -8,6 +8,7 @@ import 'package:yourcourt/main.dart';
 import 'package:yourcourt/src/Screens/CoursesScreen.dart';
 import 'package:yourcourt/src/Screens/CourtsScreen.dart';
 import 'package:http/http.dart' as http;
+import 'package:yourcourt/src/Screens/MyInscriptionsScreen.dart';
 import 'package:yourcourt/src/Screens/ProductTransactionsScreen.dart';
 import 'package:yourcourt/src/Screens/ProductsScreen.dart';
 import 'package:yourcourt/src/Screens/bookingScreen/MyBooksScreen.dart';
@@ -163,7 +164,7 @@ class _ListaDatosDeUsuario extends StatelessWidget {
               "Mis inscripciones", style: TextStyle(color: Colors.white),),
             onPressed: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => MainPage()));
+                  MaterialPageRoute(builder: (context) => MyInscriptions()));
             }
         ),
       ],

@@ -173,8 +173,7 @@ class _ProductsState extends State<Products> {
                 ],
               ),
               ElevatedButton(
-                  onPressed: () {
-                    if (_productCounter != 0) {
+                  onPressed: _productCounter == 0 ? null :() {
                       showDialog(
                           context: context,
                            builder: (context) {
@@ -206,18 +205,7 @@ class _ProductsState extends State<Products> {
                             );
                           }
                       );
-                    } else {
-                        Fluttertoast.showToast(
-                            msg: "No se puede añadir 0 productos",
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.CENTER,
-                            timeInSecForIosWeb: 1,
-                            backgroundColor: Colors.red,
-                            textColor: Colors.white,
-                            fontSize: 16.0
-                        );
-                      }
-                    },
+                      },
                   child: Text("Añadir", style: TextStyle(color: Colors.black),)
               ),
             ],

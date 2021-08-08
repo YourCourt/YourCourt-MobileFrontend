@@ -49,9 +49,7 @@ class _CourtsPageState extends State<CourtsPage> {
               children: listCourts(snapshot.data),
             );
           } else {
-            return Container(
-              child: Text("No disponible"),
-            );
+            return CircularProgressIndicator();
           }
         }
     );

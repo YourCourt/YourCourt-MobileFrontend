@@ -80,7 +80,7 @@ class _LoginPageState extends State<LoginPage> {
       setState(() {
         _isLoading = false;
       });
-      print(response.body);
+      print("Se ha producido un error: " + response.body);
     }
   }
 

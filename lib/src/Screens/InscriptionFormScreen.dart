@@ -9,6 +9,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:yourcourt/src/models/dto/InscriptionDto.dart';
 
+import '../../main.dart';
+
 class InscriptionForm extends StatefulWidget {
 
   final int courseId;
@@ -168,26 +170,31 @@ class _InscriptionFormState extends State<InscriptionForm> {
         onPressed: nameController.text == "" || emailController.text == "" || phoneController.text == "" ||
             surnamesController.text == "" ? null : () {
           //Incribir al usuario
-          signOn(nameController.text, observationsController.text, emailController.text, phoneController.text, surnamesController.text);
           showDialog(
               context: context,
-              builder: (context){
+              builder: (context) {
                 return AlertDialog(
-                  content: Text("El perfil ha sido actualizado", style: TextStyle(color: Colors.black),),
+                  content: Text("¿Desea confirmar la inscripción?"),
                   actions: [
                     ElevatedButton(
                         onPressed: () {
-                          setState(() {
-                            Navigator.pop(context);
-                          });
+                          signOn(nameController.text, observationsController.text, emailController.text, phoneController.text,
+                              surnamesController.text);
                         },
-                        child: Text("Ok", style: TextStyle(color: Colors.white),))
+                        child: Text("Si", style: TextStyle(color: Colors.white),)
+                    ),
+                    ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text("No", style: TextStyle(color: Colors.white),)
+                    ),
                   ],
                 );
               }
           );
         },
-        child: Text("Actualizar perfil", style: TextStyle(color: Colors.black)),
+        child: Text("Inscribirse", style: TextStyle(color: Colors.black)),
       ),
     );
   }
@@ -211,9 +218,29 @@ class _InscriptionFormState extends State<InscriptionForm> {
 
     if (response.statusCode == 201) {
       print("Incripción registrada con éxito");
+      showDialog(
+          context: context,
+          builder: (context){
+            return AlertDialog(
+              content: Text("La incripción ha sido registrada con éxito", style: TextStyle(color: Colors.black),),
+              actions: [
+                ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => MainPage()));
+                      });
+                    },
+                    child: Text("Ok", style: TextStyle(color: Colors.white),)
+                ),
+              ],
+            );
+          }
+      );
     }
     else {
-      print("Se ha producido un error " + response.statusCode.toString());
+      print(response.statusCode);
+      print("Se ha producido un error " + response.body);
     }
   }
 }

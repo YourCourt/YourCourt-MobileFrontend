@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:yourcourt/src/Utiles/cabeceras.dart';
 import 'package:yourcourt/src/Utiles/menu.dart';
 import 'package:yourcourt/src/Utiles/principal_structure.dart';
@@ -113,32 +114,42 @@ class _MyBooksState extends State<MyBooks> {
                   Row(
                     children: [
                       ElevatedButton(
-                        onPressed: () {
-                          showDialog(
-                              context: context,
-                              builder: (context){
-                                return AlertDialog(
-                                  content: Text("¿Desea cancelar la reserva?"),
-                                  actions: [
-                                    ElevatedButton(
-                                        onPressed: () {
-                                          deleteBook(book);
-                                          setState(() {
-                                            Navigator.pop(context);
-                                          });
-                                        },
-                                        child: Text("Si")
-                                    ),
-                                    ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: Text("No")
-                                    ),
-                                  ],
-                                );
-                              }
-                          );
+                        onPressed: DateTime.now().isAfter(DateTime.parse(book.startDate)) ? null : () {
+                            if(sharedPreferences.getInt("id") != book.userId || sharedPreferences.getStringList("roles").contains("ROLE_ADMIN")==true) {
+                              showDialog(
+                                  context: context,
+                                  builder: (context){
+                                    return AlertDialog(
+                                      content: Text("¿Desea cancelar la reserva?"),
+                                      actions: [
+                                        ElevatedButton(
+                                            onPressed: () async {
+                                              Response r = await deleteBook(book);
+                                              if(r.statusCode==200){
+                                                setState(() {
+                                                  print("Se ha cancelado la reserva con éxito");
+                                                  Navigator.pop(context);
+                                                });
+                                              } else{
+                                                print("Ha ocurrido un error: "+ r.body);
+                                              }
+
+                                            },
+                                            child: Text("Si")
+                                        ),
+                                        ElevatedButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: Text("No")
+                                        ),
+                                      ],
+                                    );
+                                  });
+                            } else {
+                              print(
+                                  "No puede cancelar una reserva que no le pertenece");
+                            }
 
                         },
                         child: Text("Cancelar reserva", style: TextStyle(color: Colors.white),),
@@ -156,49 +167,15 @@ class _MyBooksState extends State<MyBooks> {
 
   }
 
-  deleteBook(Book book) async {
+  Future<Response> deleteBook(Book book) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
-    if(DateTime.now().isBefore(DateTime.parse(book.startDate))){
-      if(getUserId(sharedPreferences.getString("username")) != book.userId || sharedPreferences.getStringList("roles").contains("ROLE_ADMIN")==true){
 
-        var response = await http.delete("https://dev-yourcourt-api.herokuapp.com/bookings/" + book.id.toString());
+        var token = sharedPreferences.getString("token");
+        var response = await http.delete("https://dev-yourcourt-api.herokuapp.com/bookings/" + book.id.toString(),
+        headers: {"Authorization": "Bearer $token"});
 
-        if(response.statusCode==200){
-          print("Reserva cancelada");
-        } else{
-
-          print(response.statusCode);
-        }
-      } else{
-        print("No puede cancelar una reserva que no le pertenece");
-      }
-    } else{
-      print("No puede cancelar una reserva que ha caducado");
-    }
-
-  }
-
-  getUserId(String username) async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    int userId;
-
-    var jsonResponse;
-    var response = await http.get(
-        "https://dev-yourcourt-api.herokuapp.com/users/username/"+username,
-        headers: {
-          "Accept": "application/json",
-          "Content-type": "application/json"
-        });
-
-    if (response.statusCode == 200) {
-      jsonResponse = json.decode(response.body);
-    }
-
-    userId = jsonResponse["id"];
-    sharedPreferences.setInt("id", userId);
-
-    return userId;
+        return response;
 
   }
 }

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../main.dart';
@@ -68,16 +69,17 @@ class _SignUpPageState extends State<SignUpPage> {
 
         sharedPreferences.setString("token", jsonResponse['token']);
         sharedPreferences.setString("username", username);
-        print("Username: ${sharedPreferences.get("username")}");
+
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (BuildContext context) => MainPage()), (
             Route<dynamic> route) => false);
       }
     }
     else {
-
-      print(response.body);
+      print(response.statusCode);
+      print("Se ha producido un error: " + response.body);
     }
+    return response;
   }
 
 
@@ -170,6 +172,7 @@ class _SignUpPageState extends State<SignUpPage> {
           SizedBox(height: 10.0),
           TextFormField(
             controller: phoneController,
+            keyboardType: TextInputType.phone,
             validator: (value){
               String mobilePattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
               RegExp regExp = new RegExp(mobilePattern);
@@ -256,14 +259,10 @@ class _SignUpPageState extends State<SignUpPage> {
       child: ElevatedButton(
         onPressed: usernameController.text == "" || passwordController.text == "" ||
             emailController.text == "" || phoneController.text == "" ||
-            membershipController.text == "" || _dateTime == null ? null : () {
+            membershipController.text == "" || _dateTime == null ? null : () async {
 
           signUp(usernameController.text, passwordController.text , emailController.text,
               phoneController.text, membershipController.text, _dateTime);
-
-          setState(() {
-            Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) =>   LoginPage()));
-          });
         },
         child: Text("Sign Up", style: TextStyle(color: Colors.white70)),
       ),
