@@ -62,9 +62,12 @@ class _MyBooksState extends State<MyBooks> {
 
     List<Book> books = [];
 
+    var token = sharedPreferences.getString("token");
+
     var jsonResponse;
     var response = await http.get(
-        "https://dev-yourcourt-api.herokuapp.com/bookings/user?username="+sharedPreferences.getString("username"));
+        "https://dev-yourcourt-api.herokuapp.com/bookings/user?username="+sharedPreferences.getString("username"),
+    headers: {"Authorization": "Bearer ${token}"},);
 
     if (response.statusCode == 200) {
       jsonResponse = json.decode(response.body);

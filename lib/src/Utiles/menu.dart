@@ -51,23 +51,20 @@ class _MenuLateralState extends State<MenuLateral>
     User userActive;
     var jsonResponse;
 
-    SharedPreferences preferences = await SharedPreferences.getInstance();
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
+    var token = sharedPreferences.getString("token");
     var response = await http.get(
-        "https://dev-yourcourt-api.herokuapp.com/users/username/" + preferences.getString("username"),
+        "https://dev-yourcourt-api.herokuapp.com/users/username/" + sharedPreferences.getString("username"),
         headers: {
+          "Authorization": "Bearer ${token}",
           "Accept": "application/json",
           "Content-type": "application/json"
         });
 
     jsonResponse = json.decode(response.body);
 
-    userActive = User(username: jsonResponse['username'],
-        birthDate: jsonResponse['birthDate'],
-        email: jsonResponse['email'],
-        membershipNumber: jsonResponse['membershipNumber'],
-        phone: jsonResponse['phone'],
-        imageUrl: jsonResponse['imageUrl']);
+    userActive = User.fromJson(jsonResponse);
 
     return userActive;
   }
