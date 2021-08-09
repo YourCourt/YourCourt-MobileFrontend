@@ -9,6 +9,7 @@ import 'package:yourcourt/src/Screens/CoursesScreen.dart';
 import 'package:yourcourt/src/Screens/CourtsScreen.dart';
 import 'package:http/http.dart' as http;
 import 'package:yourcourt/src/Screens/MyInscriptionsScreen.dart';
+import 'package:yourcourt/src/Screens/NewsScreen.dart';
 import 'package:yourcourt/src/Screens/ProductTransactionsScreen.dart';
 import 'package:yourcourt/src/Screens/ProductsScreen.dart';
 import 'package:yourcourt/src/Screens/bookingScreen/MyBooksScreen.dart';
@@ -124,7 +125,7 @@ class _ListaDatosDeUsuario extends StatelessWidget {
             child: Text(
               "Noticias", style: TextStyle(color: Colors.white),),
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => MainPage()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => NewsPage()));
             }
         ),
         ElevatedButton(

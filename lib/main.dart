@@ -54,7 +54,7 @@ class _MainPageState extends State<MainPage> {
   }
 
   Widget body() {
-     return Center(child: Text("Main Page"));
+     return Center(child: Text("YourCourt"));
   }
 
 

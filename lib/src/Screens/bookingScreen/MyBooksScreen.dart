@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:yourcourt/src/models/Book.dart';
 import 'package:yourcourt/src/models/Product.dart';
+import 'package:yourcourt/src/models/ProductBookingLine.dart';
 import 'package:yourcourt/src/utiles/functions.dart';
 
 import '../login/LoginPage.dart';
@@ -81,6 +82,9 @@ class _MyBooksState extends State<MyBooks> {
 
         books.add(Book.fromJson(item));
       }
+    } else {
+      print(response.statusCode);
+      print("Se ha producido un error: " + response.body);
     }
 
     return books;
@@ -88,49 +92,19 @@ class _MyBooksState extends State<MyBooks> {
 
   Widget listBooks(List<Book> books){
 
-    ScrollController _controller = new ScrollController();
-
     if(books.length>0){
       return ListView.builder(
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
           itemCount: books.length,
           itemBuilder: (BuildContext context, int index) {
-            if(books.elementAt(index).productBooking.lines.length>0){
               return Container(
                 child: Column(
                   children: [
                     Text("Empieza: " + books.elementAt(index).startDate, style: TextStyle(color: Colors.black),),
                     Text("Termina: " + books.elementAt(index).endDate, style: TextStyle(color: Colors.black),),
                     Text("Productos incluidos: ", style: TextStyle(color: Colors.black),),
-                    ListView.builder(
-                        controller: _controller,
-                        shrinkWrap: true,
-                        itemCount: books.elementAt(index).productBooking.lines.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return FutureBuilder(
-                              future: getProduct(books.elementAt(index).productBooking.lines.elementAt(index).productId),
-                              builder: (context, snapshot){
-                                if(snapshot.connectionState==ConnectionState.done){
-                                  return Column(
-                                    children: [
-                                      Image(
-                                        fit: BoxFit.fitHeight,
-                                        image: NetworkImage(snapshot.data.image.imageUrl),),
-                                      Text(snapshot.data.name, style: TextStyle(color: Colors.black),),
-                                      Text(snapshot.data.description, style: TextStyle(color: Colors.black),),
-                                      Text(snapshot.data.price.toString(), style: TextStyle(color: Colors.black),),
-                                      Text(snapshot.data.productType, style: TextStyle(color: Colors.black),),
-                                      Text(snapshot.data.stock.toString(), style: TextStyle(color: Colors.black),),
-                                      Text(books.elementAt(index).productBooking.lines.elementAt(index).quantity.toString(), style: TextStyle(color: Colors.black),),
-                                    ],
-                                  );
-                                }
-                                return CircularProgressIndicator();
-                              }
-                          );
-                        }
-                    ),
+                    listProducts(books.elementAt(index).productBooking.lines),
                     Text("Total de la reserva: " + books.elementAt(index).productBookingSum.toString(), style: TextStyle(color: Colors.black),),
                     Row(
                       children: [
@@ -181,10 +155,6 @@ class _MyBooksState extends State<MyBooks> {
                   ],
                 ),
               );
-            } else {
-              return Container();
-            }
-
           }
       );
     }
@@ -194,87 +164,43 @@ class _MyBooksState extends State<MyBooks> {
       );
     }
 
-    /*List<Widget> books = [];
+  }
 
-    for (var book in data){
-      if(DateTime.now().isAfter(DateTime.parse(book.startDate))){
-        books.add(
-          Container(
-              padding: const EdgeInsets.all(8),
-              child: Column(
-                children: [
-                  Text("Empieza: " + book.startDate, style: TextStyle(color: Colors.black),),
-                  Text("Termina: " + book.endDate, style: TextStyle(color: Colors.black),),
-                  Text("Productos: " + book.productBooking.lines.toString(), style: TextStyle(color: Colors.black),),
-                  Text("Precio final: " + book.productBookingSum.toString(), style: TextStyle(color: Colors.black),),
-                ]
-              ),
-          ));
-      }
-      else {
-        books.add(
-            Container(
-              padding: const EdgeInsets.all(8),
-              child: Column(
-                children: [
-                  Text("Empieza: " + book.startDate, style: TextStyle(color: Colors.black),),
-                  Text("Termina: " + book.endDate, style: TextStyle(color: Colors.black),),
-                  Text("Productos: " + book.productBooking.lines.toString(), style: TextStyle(color: Colors.black),),
-                  Text("Precio final: " + book.productBookingSum.toString(), style: TextStyle(color: Colors.black),),
-                  Row(
-                    children: [
-                      ElevatedButton(
-                        onPressed: DateTime.now().isAfter(DateTime.parse(book.startDate)) ? null : () {
-                            if(sharedPreferences.getInt("id") != book.userId || sharedPreferences.getStringList("roles").contains("ROLE_ADMIN")==true) {
-                              showDialog(
-                                  context: context,
-                                  builder: (context){
-                                    return AlertDialog(
-                                      content: Text("¿Desea cancelar la reserva?"),
-                                      actions: [
-                                        ElevatedButton(
-                                            onPressed: () async {
-                                              Response r = await deleteBook(book);
-                                              if(r.statusCode==200){
-                                                setState(() {
-                                                  print("Se ha cancelado la reserva con éxito");
-                                                  Navigator.pop(context);
-                                                });
-                                              } else{
-                                                print("Ha ocurrido un error: "+ r.body);
-                                              }
+  Widget listProducts(List<ProductBookingLine> products) {
+    ScrollController _controller = new ScrollController();
 
-                                            },
-                                            child: Text("Si")
-                                        ),
-                                        ElevatedButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            },
-                                            child: Text("No")
-                                        ),
-                                      ],
-                                    );
-                                  });
-                            } else {
-                              print(
-                                  "No puede cancelar una reserva que no le pertenece");
-                            }
-
-                        },
-                        child: Text("Cancelar reserva", style: TextStyle(color: Colors.white),),
-                      ),
-
-                    ],
-                  )
-                ],
-              ),
-            ));
+    if(products.length>0){
+      return ListView.builder(
+          controller: _controller,
+          shrinkWrap: true,
+          itemCount: products.length,
+          itemBuilder: (BuildContext context, int index) {
+            return FutureBuilder(
+                future: getProduct(products.elementAt(index).productId),
+                builder: (context, snapshot){
+                  if(snapshot.connectionState==ConnectionState.done){
+                    return Column(
+                      children: [
+                        Image(
+                          fit: BoxFit.fitHeight,
+                          image: NetworkImage(snapshot.data.image.imageUrl),),
+                        Text(snapshot.data.name, style: TextStyle(color: Colors.black),),
+                        Text(snapshot.data.description, style: TextStyle(color: Colors.black),),
+                        Text(snapshot.data.price.toString(), style: TextStyle(color: Colors.black),),
+                        Text(snapshot.data.productType, style: TextStyle(color: Colors.black),),
+                        Text(snapshot.data.stock.toString(), style: TextStyle(color: Colors.black),),
+                        Text(products.elementAt(index).quantity.toString(), style: TextStyle(color: Colors.black),),
+                      ],
+                    );
+                  }
+                  return CircularProgressIndicator();
+                }
+            );
+          }
+      );
+    } else {
+      return SizedBox(height: 5,);
     }
-
-    }
-    return books;*/
-
   }
 
   Future<Response> deleteBook(Book book) async {
