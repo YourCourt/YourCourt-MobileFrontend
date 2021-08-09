@@ -77,9 +77,7 @@ class _CommentsState extends State<Comments> {
                                     actions: [
                                       ElevatedButton(
                                           onPressed: () async {
-                                            setState(() {
-                                              addNewComment(commentController.text, widget.newsId);
-                                            });
+                                            addNewComment(commentController.text, widget.newsId);
                                           },
                                           child: Text("Comentar")
                                       ),
@@ -185,9 +183,7 @@ class _CommentsState extends State<Comments> {
                     actions: [
                       ElevatedButton(
                           onPressed: () async {
-                            setState(() {
-                              deleteComment(comment.id);
-                            });
+                            deleteComment(comment.id);
                           },
                           child: Text("Si")
                       ),
@@ -226,6 +222,7 @@ class _CommentsState extends State<Comments> {
       setState(() {
         Navigator.pop(context);
       });
+
     } else {
       print(response.statusCode);
       print("Se ha producido un error: " + response.body);

@@ -119,16 +119,7 @@ class _MyBooksState extends State<MyBooks> {
                                       actions: [
                                         ElevatedButton(
                                             onPressed: () async {
-                                              Response r = await deleteBook(books.elementAt(index));
-                                              if(r.statusCode==200){
-                                                setState(() {
-                                                  print("Se ha cancelado la reserva con éxito");
-                                                  Navigator.pop(context);
-                                                });
-                                              } else{
-                                                print("Ha ocurrido un error: "+ r.body);
-                                              }
-
+                                              deleteBook(books.elementAt(index));
                                             },
                                             child: Text("Si")
                                         ),
@@ -149,7 +140,6 @@ class _MyBooksState extends State<MyBooks> {
                           },
                           child: Text("Cancelar reserva", style: TextStyle(color: Colors.white),),
                         ),
-
                       ],
                     ),
                   ],
@@ -169,7 +159,7 @@ class _MyBooksState extends State<MyBooks> {
   Widget listProducts(List<ProductBookingLine> products) {
     ScrollController _controller = new ScrollController();
 
-    if(products.length>0){
+    if (products.length > 0) {
       return ListView.builder(
           controller: _controller,
           shrinkWrap: true,
@@ -177,25 +167,43 @@ class _MyBooksState extends State<MyBooks> {
           itemBuilder: (BuildContext context, int index) {
             return FutureBuilder(
                 future: getProduct(products.elementAt(index).productId),
-                builder: (context, snapshot){
-                  if(snapshot.connectionState==ConnectionState.done){
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
                     return Column(
                       children: [
                         Image(
                           fit: BoxFit.fitHeight,
-                          image: NetworkImage(snapshot.data.image.imageUrl),),
-                        Text(snapshot.data.name, style: TextStyle(color: Colors.black),),
-                        Text(snapshot.data.description, style: TextStyle(color: Colors.black),),
-                        Text(snapshot.data.price.toString(), style: TextStyle(color: Colors.black),),
-                        Text(snapshot.data.productType, style: TextStyle(color: Colors.black),),
-                        Text(snapshot.data.stock.toString(), style: TextStyle(color: Colors.black),),
-                        Text(products.elementAt(index).quantity.toString(), style: TextStyle(color: Colors.black),),
+                          image: NetworkImage(snapshot.data.image.imageUrl),
+                        ),
+                        Text(
+                          snapshot.data.name,
+                          style: TextStyle(color: Colors.black),
+                        ),
+                        Text(
+                          snapshot.data.description,
+                          style: TextStyle(color: Colors.black),
+                        ),
+                        Text(
+                          snapshot.data.price.toString(),
+                          style: TextStyle(color: Colors.black),
+                        ),
+                        Text(
+                          snapshot.data.productType,
+                          style: TextStyle(color: Colors.black),
+                        ),
+                        Text(
+                          snapshot.data.stock.toString(),
+                          style: TextStyle(color: Colors.black),
+                        ),
+                        Text(
+                          products.elementAt(index).quantity.toString(),
+                          style: TextStyle(color: Colors.black),
+                        ),
                       ],
                     );
                   }
                   return CircularProgressIndicator();
-                }
-            );
+                });
           }
       );
     } else {
@@ -203,15 +211,23 @@ class _MyBooksState extends State<MyBooks> {
     }
   }
 
-  Future<Response> deleteBook(Book book) async {
+  deleteBook(Book book) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
-
-        var token = sharedPreferences.getString("token");
-        var response = await http.delete("https://dev-yourcourt-api.herokuapp.com/bookings/" + book.id.toString(),
+    var token = sharedPreferences.getString("token");
+    var response = await http.delete(
+        "https://dev-yourcourt-api.herokuapp.com/bookings/" +
+            book.id.toString(),
         headers: {"Authorization": "Bearer $token"});
 
-        return response;
+    if (response.statusCode == 200) {
+      setState(() {
+        print("Se ha cancelado la reserva con éxito");
+        Navigator.pop(context);
+      });
+    } else{
+      print("Ha ocurrido un error: "+ response.body);
+    }
 
   }
 
