@@ -8,6 +8,7 @@ import 'package:yourcourt/src/models/Product.dart';
 import 'package:http/http.dart' as http;
 import 'package:yourcourt/src/models/dto/ProductPurchaseDto.dart';
 import 'package:yourcourt/src/models/dto/ProductPurchaseLineDto.dart';
+import 'package:yourcourt/src/utiles/functions.dart';
 import 'package:yourcourt/src/vars.dart';
 import 'login/LoginPage.dart';
 import 'dart:convert';
@@ -97,7 +98,7 @@ class _ShoppingPurchaseProductsState extends State<ShoppingPurchaseProducts> {
     var response = await http.get("https://dev-yourcourt-api.herokuapp.com/products/"+id.toString());
 
     if(response.statusCode==200){
-      jsonResponse = json.decode(response.body);
+      jsonResponse = transformUtf8(response.bodyBytes);
       p = Product.fromJson(jsonResponse);
     } else{
       print("Se ha producido un error" + response.statusCode.toString());

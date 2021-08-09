@@ -6,6 +6,7 @@ import 'package:yourcourt/src/Utiles/cabeceras.dart';
 import 'package:yourcourt/src/Utiles/principal_structure.dart';
 import 'package:yourcourt/src/Utiles/menu.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:yourcourt/src/utiles/functions.dart';
 import '../models/Court.dart';
 import 'bookingScreen/BookingScreen.dart';
 import 'login/LoginPage.dart';
@@ -104,7 +105,7 @@ class _CourtsPageState extends State<CourtsPage> {
     var response = await http.get(
         "https://dev-yourcourt-api.herokuapp.com/courts");
     if (response.statusCode == 200) {
-      jsonResponse = json.decode(response.body);
+      jsonResponse = transformUtf8(response.bodyBytes);
     }
     for (var item in jsonResponse) {
 

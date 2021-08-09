@@ -13,6 +13,7 @@ import 'package:yourcourt/src/models/BookingDate.dart';
 import 'package:yourcourt/src/models/Product.dart';
 import 'package:http/http.dart' as http;
 import 'package:yourcourt/src/models/ProductBookingLine.dart';
+import 'package:yourcourt/src/utiles/functions.dart';
 
 import 'BookConfirmationScreen.dart';
 
@@ -208,7 +209,7 @@ class _ProductBookingState extends State<ProductBooking> {
 
     var response = await http.get("https://dev-yourcourt-api.herokuapp.com/products/bookableProductsByType?typeName="+type);
     if (response.statusCode==200){
-      jsonResponse = json.decode(response.body);
+      jsonResponse = transformUtf8(response.bodyBytes);
       for (var item in jsonResponse) {
         products.add(Product.fromJson(item));
       }

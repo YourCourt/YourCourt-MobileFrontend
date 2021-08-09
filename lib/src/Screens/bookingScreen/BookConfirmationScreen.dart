@@ -14,6 +14,7 @@ import 'package:yourcourt/src/models/Court.dart';
 import 'package:http/http.dart' as http;
 import 'package:yourcourt/src/models/Product.dart';
 import 'package:yourcourt/src/models/ProductBookingLine.dart';
+import 'package:yourcourt/src/utiles/functions.dart';
 
 import '../login/LoginPage.dart';
 
@@ -182,7 +183,7 @@ class _BookConfirmationState extends State<BookConfirmation> {
 
     var response = await http.get("https://dev-yourcourt-api.herokuapp.com/products/"+id.toString());
     if (response.statusCode==200){
-      jsonResponse = json.decode(response.body);
+      jsonResponse = transformUtf8(response.bodyBytes);
 
       product = Product.fromJson(jsonResponse);
 

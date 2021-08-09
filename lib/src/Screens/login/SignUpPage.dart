@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:yourcourt/src/utiles/functions.dart';
 
 import '../../../main.dart';
 import 'LoginPage.dart';
@@ -64,7 +65,7 @@ class _SignUpPageState extends State<SignUpPage> {
           "Content-type": "application/json"
         });
     if (response.statusCode == 201) {
-      jsonResponse = json.decode(response.body);
+      jsonResponse = transformUtf8(response.bodyBytes);
       if (jsonResponse != null) {
 
         sharedPreferences.setString("token", jsonResponse['token']);

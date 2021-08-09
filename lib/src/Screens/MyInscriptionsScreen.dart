@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:yourcourt/src/Utiles/menu.dart';
 import 'package:yourcourt/src/Utiles/principal_structure.dart';
 import 'package:yourcourt/src/models/Inscription.dart';
+import 'package:yourcourt/src/utiles/functions.dart';
 
 import 'login/LoginPage.dart';
 
@@ -69,7 +70,8 @@ class _MyInscriptionsState extends State<MyInscriptions> {
       headers: {"Authorization": "Bearer $token"},);
 
     if (response.statusCode == 200) {
-      jsonResponse = json.decode(response.body);
+
+      jsonResponse = transformUtf8(response.bodyBytes);
 
       for (var item in jsonResponse) {
 

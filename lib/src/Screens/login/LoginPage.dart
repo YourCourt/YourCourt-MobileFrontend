@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yourcourt/src/utiles/already_have_an_account_check.dart';
+import 'package:yourcourt/src/utiles/functions.dart';
 import '../../../main.dart';
 import 'SignUpPage.dart';
 
@@ -56,7 +57,7 @@ class _LoginPageState extends State<LoginPage> {
 
     var response = await http.post("https://dev-yourcourt-api.herokuapp.com/auth/login", body: json.encode(data), headers: {"Accept" : "application/json", "Content-type":"application/json"});
     if(response.statusCode == 201) {
-    jsonResponse = json.decode(response.body);
+      jsonResponse = transformUtf8(response.bodyBytes);
       if(jsonResponse != null) {
         setState(() {
           _isLoading = true;

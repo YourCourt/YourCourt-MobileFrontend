@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yourcourt/src/models/Product.dart';
 import 'package:yourcourt/src/models/ProductPurchase.dart';
 import 'package:yourcourt/src/models/ProductPurchaseLine.dart';
+import 'package:yourcourt/src/utiles/functions.dart';
 
 import 'login/LoginPage.dart';
 
@@ -125,7 +126,7 @@ class _ProductTransactionsState extends State<ProductTransactions> {
     var response = await http.get("https://dev-yourcourt-api.herokuapp.com/products/"+id.toString());
 
     if(response.statusCode==200){
-      jsonResponse = json.decode(response.body);
+      jsonResponse = transformUtf8(response.bodyBytes);
       p = Product.fromJson(jsonResponse);
     } else{
       print("Se ha producido un error" + response.statusCode.toString());
@@ -146,7 +147,7 @@ class _ProductTransactionsState extends State<ProductTransactions> {
     headers: {"Authorization": "Bearer ${token}"},);
 
     if (response.statusCode == 200) {
-      jsonResponse = json.decode(response.body);
+      jsonResponse = transformUtf8(response.bodyBytes);
 
       for (var item in jsonResponse) {
 

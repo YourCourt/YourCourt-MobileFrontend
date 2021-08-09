@@ -7,6 +7,7 @@ import 'package:yourcourt/src/Utiles/cabeceras.dart';
 import 'package:yourcourt/src/Utiles/principal_structure.dart';
 import 'package:yourcourt/src/Utiles/menu.dart';
 import 'package:yourcourt/src/models/User.dart';
+import 'package:yourcourt/src/utiles/functions.dart';
 import 'login/LoginPage.dart';
 import 'package:http/http.dart' as http;
 
@@ -224,7 +225,7 @@ class _MyProfileState extends State<MyProfile> {
         });
 
     if (response.statusCode == 200) {
-      jsonResponse = json.decode(response.body);
+      jsonResponse = transformUtf8(response.bodyBytes);
     }
     user = User.fromJson(jsonResponse);
 
