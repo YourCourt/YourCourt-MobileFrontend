@@ -10,10 +10,10 @@ import 'package:yourcourt/src/Utiles/menu.dart';
 import 'package:yourcourt/src/models/BookingDate.dart';
 import 'package:yourcourt/src/models/Court.dart';
 import 'package:http/http.dart' as http;
+import 'package:yourcourt/src/utiles/functions.dart';
 
 import 'BookConfirmationScreen.dart';
 import '../login/LoginPage.dart';
-import '../PerfilScreen.dart';
 
 class BookingPage extends StatefulWidget {
 
@@ -188,7 +188,7 @@ class SeleccionaHora extends StatelessWidget {
         });
 
     if (response.statusCode == 200) {
-      jsonResponse = json.decode(response.body);
+      jsonResponse = transformUtf8(response.bodyBytes);
     }
     for (var book in jsonResponse){
 

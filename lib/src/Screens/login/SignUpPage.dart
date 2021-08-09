@@ -3,9 +3,12 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:yourcourt/src/utiles/functions.dart';
 
 import '../../../main.dart';
+import 'LoginPage.dart';
 
 class SignUpPage extends StatefulWidget {
 
@@ -62,21 +65,22 @@ class _SignUpPageState extends State<SignUpPage> {
           "Content-type": "application/json"
         });
     if (response.statusCode == 201) {
-      jsonResponse = json.decode(response.body);
+      jsonResponse = transformUtf8(response.bodyBytes);
       if (jsonResponse != null) {
 
         sharedPreferences.setString("token", jsonResponse['token']);
         sharedPreferences.setString("username", username);
-        print("Username: ${sharedPreferences.get("username")}");
+
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (BuildContext context) => MainPage()), (
             Route<dynamic> route) => false);
       }
     }
     else {
-
-      print(response.body);
+      print(response.statusCode);
+      print("Se ha producido un error: " + response.body);
     }
+    return response;
   }
 
 
@@ -106,6 +110,12 @@ class _SignUpPageState extends State<SignUpPage> {
         children: <Widget>[
           TextFormField(
             controller: usernameController,
+            validator: (value) {
+              if (value.length == 0) {
+                return 'Por favor, introduzca un nombre de usuario';
+              }
+              return null;
+            },
             cursorColor: Colors.white,
             style: TextStyle(color: Colors.white),
             decoration: InputDecoration(
@@ -119,6 +129,12 @@ class _SignUpPageState extends State<SignUpPage> {
           SizedBox(height: 10.0),
           TextFormField(
             controller: passwordController,
+            validator: (value) {
+              if (value.length == 0) {
+                return 'Por favor, introduzca una contraseña';
+              }
+              return null;
+            },
             cursorColor: Colors.white,
             obscureText: true,
             style: TextStyle(color: Colors.white70),
@@ -133,6 +149,17 @@ class _SignUpPageState extends State<SignUpPage> {
           SizedBox(height: 10.0),
           TextFormField(
             controller: emailController,
+            validator: (value) {
+              String emailPatter = r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
+              RegExp regExp = new RegExp(emailPatter);
+              if (value.length == 0) {
+                return 'Por favor, introduzca un email';
+              }
+              else if (!regExp.hasMatch(value)) {
+                return 'Por favor, introduzca un email válido';
+              }
+              return null;
+            },
             cursorColor: Colors.white,
             style: TextStyle(color: Colors.white70),
             decoration: InputDecoration(
@@ -146,6 +173,18 @@ class _SignUpPageState extends State<SignUpPage> {
           SizedBox(height: 10.0),
           TextFormField(
             controller: phoneController,
+            keyboardType: TextInputType.phone,
+            validator: (value){
+              String mobilePattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
+              RegExp regExp = new RegExp(mobilePattern);
+              if (value.length == 0) {
+                return 'Por favor, introduzca un número de teléfono';
+              }
+              else if (!regExp.hasMatch(value)) {
+                return 'Por favor, introduzca un número de teléfono válido';
+              }
+              return null;
+            },
             cursorColor: Colors.white,
             style: TextStyle(color: Colors.white70),
             decoration: InputDecoration(
@@ -159,6 +198,17 @@ class _SignUpPageState extends State<SignUpPage> {
           SizedBox(height: 10.0),
           TextFormField(
             controller: membershipController,
+            validator: (value) {
+              String memberShipPatter = r"\\b\\d{5}\\b";
+              RegExp regExp = new RegExp(memberShipPatter);
+              if (value.length == 0) {
+                return 'Por favor, introduzca un número de socio';
+              }
+              else if (!regExp.hasMatch(value)) {
+                return 'Por favor, introduzca un número de socio válido';
+              }
+              return null;
+            },
             cursorColor: Colors.white,
             style: TextStyle(color: Colors.white70),
             decoration: InputDecoration(
@@ -210,7 +260,7 @@ class _SignUpPageState extends State<SignUpPage> {
       child: ElevatedButton(
         onPressed: usernameController.text == "" || passwordController.text == "" ||
             emailController.text == "" || phoneController.text == "" ||
-            membershipController.text == "" || _dateTime == null ? null : () {
+            membershipController.text == "" || _dateTime == null ? null : () async {
 
           signUp(usernameController.text, passwordController.text , emailController.text,
               phoneController.text, membershipController.text, _dateTime);

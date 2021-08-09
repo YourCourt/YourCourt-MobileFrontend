@@ -12,6 +12,7 @@ import 'package:yourcourt/src/models/Product.dart';
 import 'package:yourcourt/src/models/dto/ProductPurchaseDto.dart';
 import 'package:yourcourt/src/models/dto/ProductPurchaseLineDto.dart';
 import 'package:gson/gson.dart';
+import 'package:yourcourt/src/utiles/functions.dart';
 
 import '../vars.dart';
 import 'login/LoginPage.dart';
@@ -173,8 +174,7 @@ class _ProductsState extends State<Products> {
                 ],
               ),
               ElevatedButton(
-                  onPressed: () {
-                    if (_productCounter != 0) {
+                  onPressed: _productCounter == 0 ? null :() {
                       showDialog(
                           context: context,
                            builder: (context) {
@@ -206,18 +206,7 @@ class _ProductsState extends State<Products> {
                             );
                           }
                       );
-                    } else {
-                        Fluttertoast.showToast(
-                            msg: "No se puede alquilar 0 productos",
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.CENTER,
-                            timeInSecForIosWeb: 1,
-                            backgroundColor: Colors.red,
-                            textColor: Colors.white,
-                            fontSize: 16.0
-                        );
-                      }
-                    },
+                      },
                   child: Text("Añadir", style: TextStyle(color: Colors.black),)
               ),
             ],
@@ -235,7 +224,7 @@ class _ProductsState extends State<Products> {
     var response = await http.get(
         "https://dev-yourcourt-api.herokuapp.com/products/productTypes");
     if (response.statusCode == 200) {
-      jsonResponse = json.decode(response.body);
+      jsonResponse = transformUtf8(response.bodyBytes);
     }
     for (var item in jsonResponse) {
       productTypes.add(item["typeName"]);
@@ -251,7 +240,7 @@ class _ProductsState extends State<Products> {
         "https://dev-yourcourt-api.herokuapp.com/products/productsByType?typeName=" +
             type);
     if (response.statusCode == 200) {
-      jsonResponse = json.decode(response.body);
+      jsonResponse = transformUtf8(response.bodyBytes);
       for (var item in jsonResponse) {
         products.add(Product.fromJson(item));
       }

@@ -13,6 +13,7 @@ import 'package:yourcourt/src/models/BookingDate.dart';
 import 'package:yourcourt/src/models/Product.dart';
 import 'package:http/http.dart' as http;
 import 'package:yourcourt/src/models/ProductBookingLine.dart';
+import 'package:yourcourt/src/utiles/functions.dart';
 
 import 'BookConfirmationScreen.dart';
 
@@ -49,9 +50,9 @@ class _ProductBookingState extends State<ProductBooking> {
     return Principal(context, sharedPreferences, appHeadboard(context, sharedPreferences), body(), MenuLateral());
 
   }
-  int stockLimit = 20;
+  int _stockLimit = 20;
   List<ProductBookingLine> productsBooking = [];
-  int _counterProduct = 0;
+  int _productCounter = 0;
   String _productType = "Raqueta";
 
   Widget body() {
@@ -66,6 +67,7 @@ class _ProductBookingState extends State<ProductBooking> {
                     onChanged: (dynamic value) {
                       setState(() {
                         _productType = value;
+                        _productCounter = 0;
                       });
                     },
                     value: _productType,
@@ -139,26 +141,44 @@ class _ProductBookingState extends State<ProductBooking> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    _counterProduct!=0? new  IconButton(icon: new Icon(Icons.remove),onPressed: ()=>setState(()=>_counterProduct--),):new Container(),
-                    new Text(_counterProduct.toString()),
-                    new IconButton(icon: new Icon(Icons.add),onPressed: ()=>setState(()=>_counterProduct++))
+                    _productCounter != 0 ? new
+                    IconButton(
+                      icon: new Icon(Icons.remove),
+                      onPressed: () {
+                        setState(() {
+                          _productCounter--;
+                        });
+                      },
+                    )
+                        : new Container(),
+                    new Text(_productCounter.toString()),
+                    products
+                        .elementAt(index)
+                        .stock - _productCounter > _stockLimit ?
+                    new
+                    IconButton(
+                        icon: new Icon(Icons.add),
+                        onPressed: () {
+                          setState(() {
+                            _productCounter++;
+                          });
+                        }
+                    ) : new Container(),
                   ],
                 ),
                 ElevatedButton(
-                    onPressed: () {
-                      if(products.elementAt(index).stock - _counterProduct<= stockLimit){
-                        if(_counterProduct!=0){
+                    onPressed: _productCounter==0 ? null : () {
                           showDialog(
                               context: context,
                               builder: (context){
                                 return AlertDialog(
-                                  content: Text("Desea añadir " + _counterProduct.toString() + " " + products.elementAt(index).name+""),
+                                  content: Text("Desea añadir " + _productCounter.toString() + " " + products.elementAt(index).name+""),
                                   actions: [
                                     ElevatedButton(
                                         onPressed: () {
-                                          productsBooking.add(ProductBookingLine(discount: 0,productId:products.elementAt(index).id, quantity: _counterProduct ));
+                                          productsBooking.add(ProductBookingLine(discount: 0,productId:products.elementAt(index).id, quantity: _productCounter ));
                                           Navigator.pop(context);
-                                          _counterProduct=0;
+                                          _productCounter=0;
                                         },
                                         child: Text("Si")
                                     ),
@@ -172,31 +192,6 @@ class _ProductBookingState extends State<ProductBooking> {
                                 );
                               }
                           );
-                        }
-                        else{
-                          Fluttertoast.showToast(
-                              msg: "No se puede alquilar 0 productos",
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.CENTER,
-                              timeInSecForIosWeb: 1,
-                              backgroundColor: Colors.red,
-                              textColor: Colors.white,
-                              fontSize: 16.0
-                          );
-                        }
-                      } else {
-                        Fluttertoast.showToast(
-                            msg: "No puede alquilar " + _counterProduct.toString()+ " " + products.elementAt(index).name + "debido al stock bajo",
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.CENTER,
-                            timeInSecForIosWeb: 1,
-                            backgroundColor: Colors.red,
-                            textColor: Colors.white,
-                            fontSize: 16.0
-                        );
-                      }
-
-
                     },
                     child: Text("Añadir", style: TextStyle(color: Colors.black),)
                 ),
@@ -214,7 +209,7 @@ class _ProductBookingState extends State<ProductBooking> {
 
     var response = await http.get("https://dev-yourcourt-api.herokuapp.com/products/bookableProductsByType?typeName="+type);
     if (response.statusCode==200){
-      jsonResponse = json.decode(response.body);
+      jsonResponse = transformUtf8(response.bodyBytes);
       for (var item in jsonResponse) {
         products.add(Product.fromJson(item));
       }

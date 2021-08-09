@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:yourcourt/main.dart';
+import 'package:yourcourt/src/Screens/CoursesScreen.dart';
 import 'package:yourcourt/src/Screens/CourtsScreen.dart';
 import 'package:http/http.dart' as http;
+import 'package:yourcourt/src/Screens/MyInscriptionsScreen.dart';
 import 'package:yourcourt/src/Screens/ProductTransactionsScreen.dart';
 import 'package:yourcourt/src/Screens/ProductsScreen.dart';
 import 'package:yourcourt/src/Screens/bookingScreen/MyBooksScreen.dart';
@@ -127,14 +129,6 @@ class _ListaDatosDeUsuario extends StatelessWidget {
         ),
         ElevatedButton(
             child: Text(
-              "Escuela", style: TextStyle(color: Colors.white),),
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => MainPage()));
-            }
-        ),
-        ElevatedButton(
-            child: Text(
               "Productos", style: TextStyle(color: Colors.white),),
             onPressed: () {
               Navigator.push(context,
@@ -155,6 +149,22 @@ class _ListaDatosDeUsuario extends StatelessWidget {
             onPressed: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => ProductTransactions()));
+            }
+        ),
+        ElevatedButton(
+            child: Text(
+              "Cursos", style: TextStyle(color: Colors.white),),
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => Courses()));
+            }
+        ),
+        ElevatedButton(
+            child: Text(
+              "Mis inscripciones", style: TextStyle(color: Colors.white),),
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => MyInscriptions()));
             }
         ),
       ],

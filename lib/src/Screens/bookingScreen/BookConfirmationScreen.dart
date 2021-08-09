@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:yourcourt/main.dart';
 import 'package:yourcourt/src/Screens/bookingScreen/ProductBooking.dart';
 import 'package:yourcourt/src/Utiles/cabeceras.dart';
@@ -13,6 +14,7 @@ import 'package:yourcourt/src/models/Court.dart';
 import 'package:http/http.dart' as http;
 import 'package:yourcourt/src/models/Product.dart';
 import 'package:yourcourt/src/models/ProductBookingLine.dart';
+import 'package:yourcourt/src/utiles/functions.dart';
 
 import '../login/LoginPage.dart';
 
@@ -77,9 +79,15 @@ class _BookConfirmationState extends State<BookConfirmation> {
           child: Text("Alquilar productos", style: TextStyle(color: Colors.black),),
         ),
         ElevatedButton(
-            onPressed: () {
-              confirmBook();
-              Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => MainPage()));
+            onPressed: () async {
+              //Si se produce algún error en la reserva, mostrarlo.
+              Response r = await confirmBook();
+              if(r.statusCode == 201){
+                Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => MainPage()));
+              } else{
+                print("Se ha producido un error: " + r.body);
+              }
+
               },
             child: Text(
               "Confirmar reserva", style: TextStyle(color: Colors.black),)),
@@ -97,7 +105,7 @@ class _BookConfirmationState extends State<BookConfirmation> {
     return productsBookingToJson;
   }
 
-  confirmBook() async {
+  Future<Response> confirmBook() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
     Map data = {};
@@ -133,9 +141,10 @@ class _BookConfirmationState extends State<BookConfirmation> {
     if (response.statusCode == 201) {
       print("Reserva creada");
     } else{
-      print(data);
       print(response.statusCode);
+      print(response.body);
     }
+    return response;
 
   }
 
@@ -174,7 +183,7 @@ class _BookConfirmationState extends State<BookConfirmation> {
 
     var response = await http.get("https://dev-yourcourt-api.herokuapp.com/products/"+id.toString());
     if (response.statusCode==200){
-      jsonResponse = json.decode(response.body);
+      jsonResponse = transformUtf8(response.bodyBytes);
 
       product = Product.fromJson(jsonResponse);
 
