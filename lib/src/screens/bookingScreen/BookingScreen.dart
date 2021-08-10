@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +14,6 @@ import 'BookConfirmationScreen.dart';
 import '../login/LoginPage.dart';
 
 class BookingPage extends StatefulWidget {
-
   final Court court;
 
   const BookingPage({Key key, this.court}) : super(key: key);
@@ -25,7 +23,6 @@ class BookingPage extends StatefulWidget {
 }
 
 class _BookingPageState extends State<BookingPage> {
-
   SharedPreferences sharedPreferences;
 
   @override
@@ -36,8 +33,10 @@ class _BookingPageState extends State<BookingPage> {
 
   checkLoginStatus() async {
     sharedPreferences = await SharedPreferences.getInstance();
-    if(sharedPreferences.getString("token") == null) {
-      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => LoginPage()), (Route<dynamic> route) => false);
+    if (sharedPreferences.getString("token") == null) {
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (BuildContext context) => LoginPage()),
+          (Route<dynamic> route) => false);
     }
   }
 
@@ -45,31 +44,30 @@ class _BookingPageState extends State<BookingPage> {
 
   @override
   Widget build(BuildContext context) {
-    return principal(context, sharedPreferences, appHeadboard(context, sharedPreferences), body(), MenuLateral());
+    return principal(context, sharedPreferences,
+        appHeadboard(context, sharedPreferences), body(), MenuLateral());
   }
 
   Widget body() {
     return Column(
       children: [
-        Text('Fecha de reserva:', textAlign: TextAlign.center,
-          style: TextStyle(
-              fontSize: 20,
-              color: Colors.black
-          ),
+        Text(
+          'Fecha de reserva:',
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 20, color: Colors.black),
         ),
         SizedBox(height: 10.0),
-        Text(_date == null
-            ? 'No hay ninguna fecha seleccionada'
-            : _date),
+        Text(_date == null ? 'No hay ninguna fecha seleccionada' : _date),
         SizedBox(height: 10.0),
         ElevatedButton(
           child: Text("Seleccione el día de la reserva"),
           onPressed: () {
-            showDatePicker(context: context,
-                initialDate: DateTime.now(),
-                firstDate: DateTime.now(),
-                lastDate: DateTime.now().add(Duration(days: 7))
-            ).then((date) {
+            showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime.now(),
+                    lastDate: DateTime.now().add(Duration(days: 7)))
+                .then((date) {
               setState(() {
                 _date = DateFormat('yyyy-MM-dd').format(date);
               });
@@ -77,27 +75,26 @@ class _BookingPageState extends State<BookingPage> {
           },
         ),
         SelectHour(date: _date, court: widget.court),
-
       ],
     );
   }
-
 }
 
-
 class SelectHour extends StatefulWidget {
-
   final String date;
   final Court court;
 
-  const SelectHour({Key key, this.date, this.court,}) : super(key: key);
+  const SelectHour({
+    Key key,
+    this.date,
+    this.court,
+  }) : super(key: key);
 
   @override
   _SelectHourState createState() => _SelectHourState();
 }
 
 class _SelectHourState extends State<SelectHour> {
-
   BookDate _selectedHour;
 
   List<BookDate> possibilityHours = [
@@ -116,7 +113,6 @@ class _SelectHourState extends State<SelectHour> {
     BookDate('21:00', '22:00'),
   ];
 
-
   @override
   Widget build(BuildContext context) {
     if (widget.date != null) {
@@ -125,13 +121,16 @@ class _SelectHourState extends State<SelectHour> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               if (_selectedHour != null) {
-                Text(_selectedHour.startHour + " -> " + _selectedHour.endHour,
-                  style: TextStyle(color: Colors.black),);
-              }
-              else {
+                Text(
+                  _selectedHour.startHour + " -> " + _selectedHour.endHour,
+                  style: TextStyle(color: Colors.black),
+                );
+              } else {
                 return ElevatedButton(
-                    child: Text("Seleccionar hora",
-                      style: TextStyle(color: Colors.white),),
+                    child: Text(
+                      "Seleccionar hora",
+                      style: TextStyle(color: Colors.white),
+                    ),
                     onPressed: () {
                       showModalBottomSheet(
                           isScrollControlled: true,
@@ -139,22 +138,21 @@ class _SelectHourState extends State<SelectHour> {
                           builder: (context) {
                             return Column(
                               mainAxisSize: MainAxisSize.min,
-                              children: showAvailableHours(context, snapshot
-                                  .data),
+                              children:
+                                  showAvailableHours(context, snapshot.data),
                             );
-                          }
-                      );
-                    }
-                );
+                          });
+                    });
               }
             }
             return CircularProgressIndicator();
-          }
-      );
+          });
     }
     return Container(
-      child: Text("Debe seleccionar una fecha para poder seleccionar la hora",
-        style: TextStyle(color: Colors.black),),
+      child: Text(
+        "Debe seleccionar una fecha para poder seleccionar la hora",
+        style: TextStyle(color: Colors.black),
+      ),
     );
   }
 
@@ -164,16 +162,15 @@ class _SelectHourState extends State<SelectHour> {
     print(DateTime.now());
     if (DateTime.now().toString().contains(date)) {
       availableHours.removeWhere((element) =>
-      getDoubleNumber(element.startHour) < DateTime
-          .now()
-          .hour
-          .toDouble());
+          getDoubleNumber(element.startHour) < DateTime.now().hour.toDouble());
     }
 
     var jsonResponse;
     var response = await http.get(
         "https://dev-yourcourt-api.herokuapp.com/bookings/date?courtId=" +
-            courtId.toString() + "&date=" + date,
+            courtId.toString() +
+            "&date=" +
+            date,
         headers: {
           "Accept": "application/json",
           "Content-type": "application/json"
@@ -189,26 +186,31 @@ class _SelectHourState extends State<SelectHour> {
     return availableHours;
   }
 
-  List<Widget> showAvailableHours(BuildContext context,
-      List<BookDate> availableHours) {
+  List<Widget> showAvailableHours(
+      BuildContext context, List<BookDate> availableHours) {
     List<Widget> hours = [];
 
     for (var hour in availableHours) {
-      hours.add(
-          Expanded(
-            child: ListTile(
-              leading: new Icon(Icons.wysiwyg),
-              title: Text(hour.startHour + " -> " + hour.endHour,
-                style: TextStyle(color: Colors.black),),
-              onTap: () {
-                _selectedHour = hour;
-                Navigator.push(context, MaterialPageRoute(
+      hours.add(Expanded(
+        child: ListTile(
+          leading: new Icon(Icons.wysiwyg),
+          title: Text(
+            hour.startHour + " -> " + hour.endHour,
+            style: TextStyle(color: Colors.black),
+          ),
+          onTap: () {
+            _selectedHour = hour;
+            Navigator.push(
+                context,
+                MaterialPageRoute(
                     builder: (BuildContext context) => BookConfirmation(
-                      date: widget.date, hour: _selectedHour, court: widget.court,)));
-              },
-            ),
-          )
-      );
+                          date: widget.date,
+                          hour: _selectedHour,
+                          court: widget.court,
+                        )));
+          },
+        ),
+      ));
     }
 
     return hours;
@@ -222,4 +224,3 @@ class _SelectHourState extends State<SelectHour> {
     return numberToDouble;
   }
 }
-

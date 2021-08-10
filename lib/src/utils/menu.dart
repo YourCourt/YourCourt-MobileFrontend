@@ -7,6 +7,7 @@ import 'package:yourcourt/main.dart';
 import 'package:yourcourt/src/screens/CoursesScreen.dart';
 import 'package:yourcourt/src/screens/CourtsScreen.dart';
 import 'package:http/http.dart' as http;
+import 'package:yourcourt/src/screens/FacilitiesScreen.dart';
 import 'package:yourcourt/src/screens/MyInscriptionsScreen.dart';
 import 'package:yourcourt/src/screens/NewsScreen.dart';
 import 'package:yourcourt/src/screens/ProductTransactionsScreen.dart';
@@ -117,7 +118,7 @@ class _ListaDatosDeUsuario extends StatelessWidget {
               "Instalaciones", style: TextStyle(color: Colors.white),),
             onPressed: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => MainPage()));
+                  MaterialPageRoute(builder: (context) => Facilities()));
             }
         ),
         ElevatedButton(
