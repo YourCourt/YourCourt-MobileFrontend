@@ -1,12 +1,11 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
-import 'package:yourcourt/src/Utiles/cabeceras.dart';
-import 'package:yourcourt/src/Utiles/principal_structure.dart';
-import 'package:yourcourt/src/Utiles/menu.dart';
+import 'package:yourcourt/src/utils/principal_structure.dart';
+import 'package:yourcourt/src/utils/menu.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:yourcourt/src/utiles/functions.dart';
+import 'package:yourcourt/src/utils/functions.dart';
+import 'package:yourcourt/src/utils/headers.dart';
 import '../models/Court.dart';
 import 'bookingScreen/BookingScreen.dart';
 import 'login/LoginPage.dart';
@@ -36,7 +35,7 @@ class _CourtsPageState extends State<CourtsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Principal(context, sharedPreferences, appHeadboard(context, sharedPreferences), body(), MenuLateral());
+    return principal(context, sharedPreferences, appHeadboard(context, sharedPreferences), body(), MenuLateral());
 
   }
 

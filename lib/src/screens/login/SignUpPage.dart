@@ -3,12 +3,11 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:yourcourt/src/utiles/functions.dart';
+import 'package:yourcourt/src/utils/functions.dart';
 
 import '../../../main.dart';
-import 'LoginPage.dart';
+
 
 class SignUpPage extends StatefulWidget {
 

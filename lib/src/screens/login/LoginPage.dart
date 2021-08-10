@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:yourcourt/src/utiles/already_have_an_account_check.dart';
-import 'package:yourcourt/src/utiles/functions.dart';
+import 'package:yourcourt/src/utils/already_have_an_account_check.dart';
+import 'package:yourcourt/src/utils/functions.dart';
 import '../../../main.dart';
 import 'SignUpPage.dart';
 

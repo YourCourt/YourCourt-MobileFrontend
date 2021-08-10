@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
 
 dynamic transformUtf8(List<int> bytes){
   var jsonResponse;
