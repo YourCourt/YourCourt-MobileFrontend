@@ -1,14 +1,13 @@
-import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:yourcourt/src/Utiles/cabeceras.dart';
-import 'package:yourcourt/src/Utiles/menu.dart';
-import 'package:yourcourt/src/Utiles/principal_structure.dart';
+import 'package:yourcourt/src/utils/menu.dart';
+import 'package:yourcourt/src/utils/principal_structure.dart';
 import 'package:yourcourt/src/models/Course.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-import 'package:yourcourt/src/utiles/functions.dart';
+import 'package:yourcourt/src/utils/functions.dart';
+import 'package:yourcourt/src/utils/headers.dart';
 
 import 'InscriptionFormScreen.dart';
 
@@ -23,7 +22,7 @@ class _CoursesState extends State<Courses> {
 
   @override
   Widget build(BuildContext context) {
-    return Principal(context, sharedPreferences, appHeadboard(context, sharedPreferences), body(), MenuLateral());
+    return principal(context, sharedPreferences, appHeadboard(context, sharedPreferences), body(), MenuLateral());
   }
 
   Widget body() {

@@ -4,19 +4,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:yourcourt/src/models/Comment.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:yourcourt/src/utiles/cabeceras.dart';
-import 'package:yourcourt/src/utiles/menu.dart';
-import 'package:yourcourt/src/utiles/principal_structure.dart';
+import 'package:yourcourt/src/models/News.dart';
 import 'package:http/http.dart' as http;
+import 'package:yourcourt/src/utils/functions.dart';
+import 'package:yourcourt/src/utils/headers.dart';
+import 'package:yourcourt/src/utils/menu.dart';
+import 'package:yourcourt/src/utils/principal_structure.dart';
 
 import 'login/LoginPage.dart';
 
 class Comments extends StatefulWidget {
 
   final int newsId;
-  final List<Comment> comments;
 
-  const Comments({Key key, this.comments, this.newsId}) : super(key: key);
+  const Comments({Key key, this.newsId}) : super(key: key);
   @override
   _CommentsState createState() => _CommentsState();
 }
@@ -39,7 +40,7 @@ class _CommentsState extends State<Comments> {
 
   @override
   Widget build(BuildContext context) {
-    return Principal(context, sharedPreferences, appHeadboard(context, sharedPreferences), body(), MenuLateral());
+    return principal(context, sharedPreferences, appHeadboard(context, sharedPreferences), body(), MenuLateral());
   }
 
   final TextEditingController commentController = new TextEditingController();
@@ -50,55 +51,64 @@ class _CommentsState extends State<Comments> {
             future: getSharedPreferenceInstance(),
               builder: (context, snapshot){
                 if(snapshot.connectionState==ConnectionState.done){
-                  return Column(
-                    children: [
-                      ElevatedButton(
-                          onPressed: widget.comments.any((element) => element.user.id==sharedPreferences.getInt("id")) ? null : () {
-                            showDialog(
-                                context: context,
-                                builder: (context){
-                                  return AlertDialog(
-                                    content: TextFormField(
-                                      controller: commentController,
-                                      validator: (value) {
-                                        if (value.length == 0) {
-                                          return 'Por favor, introduzca un comentario';
-                                        }
-                                        return null;
-                                      },
-                                      decoration: InputDecoration(
-                                        icon: Icon(Icons.mode_comment_rounded, color: Colors.black),
-                                        hintText: "Comentario",
-                                        border: UnderlineInputBorder(
-                                            borderSide: BorderSide(color: Colors.black)),
-                                        hintStyle: TextStyle(color: Colors.black),
-                                      ),
-                                    ),
-                                    actions: [
-                                      ElevatedButton(
-                                          onPressed: () async {
-                                            addNewComment(commentController.text, widget.newsId);
-                                          },
-                                          child: Text("Comentar")
-                                      ),
-                                      ElevatedButton(
-                                          onPressed:  () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: Text("Volver")
-                                      ),
-                                    ],
+                  return FutureBuilder(
+                    future: getComments(widget.newsId),
+                      builder: (context, snapshot){
+                      if(snapshot.connectionState==ConnectionState.done){
+                        return Column(
+                          children: [
+                            ElevatedButton(
+                                onPressed: snapshot.data.any((element) => element.user.id==sharedPreferences.getInt("id")) ? null : () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context){
+                                        return AlertDialog(
+                                          content: TextFormField(
+                                            controller: commentController,
+                                            validator: (value) {
+                                              if (value.length == 0) {
+                                                return 'Por favor, introduzca un comentario';
+                                              }
+                                              return null;
+                                            },
+                                            decoration: InputDecoration(
+                                              icon: Icon(Icons.mode_comment_rounded, color: Colors.black),
+                                              hintText: "Comentario",
+                                              border: UnderlineInputBorder(
+                                                  borderSide: BorderSide(color: Colors.black)),
+                                              hintStyle: TextStyle(color: Colors.black),
+                                            ),
+                                          ),
+                                          actions: [
+                                            ElevatedButton(
+                                                onPressed: () async {
+                                                  addNewComment(commentController.text, widget.newsId);
+                                                },
+                                                child: Text("Comentar")
+                                            ),
+                                            ElevatedButton(
+                                                onPressed:  () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text("Volver")
+                                            ),
+                                          ],
+                                        );
+                                      }
                                   );
-                                }
-                            );
 
-                          },
-                          child: Text("Comentar")
-                      ),
-                      Expanded(
-                        child: listComments(widget.comments),
-                      )
-                    ],
+                                },
+                                child: Text("Comentar")
+                            ),
+                            Expanded(
+                              child: listComments(snapshot.data),
+                            )
+                          ],
+                        );
+                      }
+                      return CircularProgressIndicator();
+
+                      }
                   );
                 }
                 return CircularProgressIndicator();
@@ -232,6 +242,29 @@ class _CommentsState extends State<Comments> {
   Future<SharedPreferences> getSharedPreferenceInstance() async {
     sharedPreferences = await SharedPreferences.getInstance();
     return sharedPreferences;
+  }
+
+  Future<List<Comment>> getComments(int newsId) async {
+    News news;
+
+    var jsonResponse;
+    var response = await http.get(
+        "https://dev-yourcourt-api.herokuapp.com/news/" + newsId.toString(),
+        headers: {
+          "Accept": "application/json",
+          "Content-type": "application/json",
+        });
+
+    if (response.statusCode == 200) {
+      jsonResponse = transformUtf8(response.bodyBytes);
+      news = News.fromJson(jsonResponse);
+    } else {
+      print(response.statusCode);
+      print("Se ha producido un error: " + response.body);
+    }
+
+    return news.comments;
+
   }
 
 }

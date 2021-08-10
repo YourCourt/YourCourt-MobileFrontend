@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:yourcourt/main.dart';
 import 'package:yourcourt/src/Screens/CoursesScreen.dart';
 import 'package:yourcourt/src/Screens/CourtsScreen.dart';
@@ -60,7 +59,7 @@ class _MenuLateralState extends State<MenuLateral>
     var response = await http.get(
         "https://dev-yourcourt-api.herokuapp.com/users/username/" + sharedPreferences.getString("username"),
         headers: {
-          "Authorization": "Bearer ${token}",
+          "Authorization": "Bearer $token",
           "Accept": "application/json",
           "Content-type": "application/json"
         });

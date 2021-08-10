@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:yourcourt/src/Utiles/cabeceras.dart';
-import 'package:yourcourt/src/Utiles/principal_structure.dart';
+import 'package:yourcourt/src/utils/principal_structure.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:yourcourt/src/models/News.dart';
-import 'package:yourcourt/src/utiles/functions.dart';
-import 'package:yourcourt/src/utiles/menu.dart';
+import 'package:yourcourt/src/utils/functions.dart';
+import 'package:yourcourt/src/utils/headers.dart';
+import 'package:yourcourt/src/utils/menu.dart';
 import 'CommentsScreen.dart';
 import 'login/LoginPage.dart';
 
@@ -34,7 +34,7 @@ class _NewsPageState extends State<NewsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Principal(context, sharedPreferences, appHeadboard(context, sharedPreferences), body(), MenuLateral());
+    return principal(context, sharedPreferences, appHeadboard(context, sharedPreferences), body(), MenuLateral());
   }
 
   Widget body(){
@@ -91,7 +91,7 @@ class _NewsPageState extends State<NewsPage> {
                   onTap: () {
                     if (news.elementAt(index).comments.isNotEmpty)
                       Navigator.of(context).push(
-                        MaterialPageRoute(builder: (BuildContext context) => Comments(comments: news.elementAt(index).comments, newsId: news.elementAt(index).id,),),
+                        MaterialPageRoute(builder: (BuildContext context) => Comments(newsId: news.elementAt(index).id,),),
                       );
                   },
                 ),
@@ -114,7 +114,6 @@ class _NewsPageState extends State<NewsPage> {
   }
 
   Future<List<News>> getNews() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
     List<News> news = [];
     var jsonResponse;

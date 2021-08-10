@@ -1,16 +1,15 @@
-import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:yourcourt/src/Utiles/cabeceras.dart';
-import 'package:yourcourt/src/Utiles/principal_structure.dart';
-import 'package:yourcourt/src/Utiles/menu.dart';
 import 'package:yourcourt/src/models/BookingDate.dart';
 import 'package:yourcourt/src/models/Court.dart';
 import 'package:http/http.dart' as http;
-import 'package:yourcourt/src/utiles/functions.dart';
+import 'package:yourcourt/src/utils/headers.dart';
+import 'package:yourcourt/src/utils/functions.dart';
+import 'package:yourcourt/src/utils/menu.dart';
+import 'package:yourcourt/src/utils/principal_structure.dart';
 
 import 'BookConfirmationScreen.dart';
 import '../login/LoginPage.dart';
@@ -44,8 +43,6 @@ class _BookingPageState extends State<BookingPage> {
 
   String _date;
 
-  BookDate _selected_hour;
-
   List<BookDate> possibiltyHours = [
     BookDate('8:30', '10:00'),
     BookDate('10:00', '11:00'),
@@ -64,7 +61,7 @@ class _BookingPageState extends State<BookingPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Principal(context, sharedPreferences, appHeadboard(context, sharedPreferences), body(), MenuLateral());
+    return principal(context, sharedPreferences, appHeadboard(context, sharedPreferences), body(), MenuLateral());
   }
 
   Widget body() {
@@ -96,7 +93,7 @@ class _BookingPageState extends State<BookingPage> {
           },
         ),
 
-        SeleccionaHora(_date, widget.court),
+        SelectHour(_date, widget.court),
 
       ],
     );
@@ -104,11 +101,11 @@ class _BookingPageState extends State<BookingPage> {
 
 }
 
-class SeleccionaHora extends StatelessWidget {
+class SelectHour extends StatelessWidget {
   final String date;
   final Court court;
 
-  SeleccionaHora(this.date, this.court);
+  SelectHour(this.date, this.court);
 
   BookDate _selectedHour;
 
@@ -171,7 +168,6 @@ class SeleccionaHora extends StatelessWidget {
 
   Future<List<BookDate>> getAvailableHours(int courtId, String date) async {
 
-    List<BookDate> unAvailableHours = [];
     List<BookDate> availableHours = possibiltyHours;
 
     print(DateTime.now());

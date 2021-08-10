@@ -1,18 +1,14 @@
-import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:yourcourt/src/Utiles/cabeceras.dart';
-import 'package:yourcourt/src/Utiles/menu.dart';
-import 'package:yourcourt/src/Utiles/principal_structure.dart';
+import 'package:yourcourt/src/utils/menu.dart';
+import 'package:yourcourt/src/utils/principal_structure.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:yourcourt/src/models/Product.dart';
-import 'package:yourcourt/src/models/dto/ProductPurchaseDto.dart';
 import 'package:yourcourt/src/models/dto/ProductPurchaseLineDto.dart';
-import 'package:gson/gson.dart';
-import 'package:yourcourt/src/utiles/functions.dart';
+import 'package:yourcourt/src/utils/functions.dart';
+import 'package:yourcourt/src/utils/headers.dart';
 
 import '../vars.dart';
 import 'login/LoginPage.dart';
@@ -42,7 +38,7 @@ class _ProductsState extends State<Products> {
 
   @override
   Widget build(BuildContext context) {
-    return Principal(
+    return principal(
         context, sharedPreferences, appHeadboard(context, sharedPreferences),
         body(), MenuLateral());
   }

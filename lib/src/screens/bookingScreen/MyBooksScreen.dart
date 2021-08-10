@@ -1,19 +1,18 @@
-import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
-import 'package:yourcourt/src/Utiles/cabeceras.dart';
-import 'package:yourcourt/src/Utiles/menu.dart';
-import 'package:yourcourt/src/Utiles/principal_structure.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:yourcourt/src/models/Book.dart';
 import 'package:yourcourt/src/models/Product.dart';
 import 'package:yourcourt/src/models/ProductBookingLine.dart';
-import 'package:yourcourt/src/utiles/functions.dart';
+import 'package:yourcourt/src/utils/headers.dart';
+import 'package:yourcourt/src/utils/functions.dart';
+import 'package:yourcourt/src/utils/menu.dart';
+import 'package:yourcourt/src/utils/principal_structure.dart';
 
 import '../login/LoginPage.dart';
+
 
 class MyBooks extends StatefulWidget {
 
@@ -40,7 +39,7 @@ class _MyBooksState extends State<MyBooks> {
 
   @override
   Widget build(BuildContext context) {
-    return Principal(context, sharedPreferences, appHeadboard(context, sharedPreferences), body(), MenuLateral());
+    return principal(context, sharedPreferences, appHeadboard(context, sharedPreferences), body(), MenuLateral());
   }
 
   Widget body(){
@@ -73,7 +72,7 @@ class _MyBooksState extends State<MyBooks> {
     var jsonResponse;
     var response = await http.get(
         "https://dev-yourcourt-api.herokuapp.com/bookings/user?username="+sharedPreferences.getString("username"),
-    headers: {"Authorization": "Bearer ${token}"},);
+    headers: {"Authorization": "Bearer $token"},);
 
     if (response.statusCode == 200) {
       jsonResponse = transformUtf8(response.bodyBytes);
@@ -150,7 +149,7 @@ class _MyBooksState extends State<MyBooks> {
     }
     else{
       return Container(
-          child: Text("No hay ninguna transacción realizada")
+          child: Text("No hay ninguna reserva realizada")
       );
     }
 

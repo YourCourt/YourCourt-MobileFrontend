@@ -1,12 +1,10 @@
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:yourcourt/src/Utiles/cabeceras.dart';
-import 'package:yourcourt/src/Utiles/menu.dart';
-import 'package:yourcourt/src/Screens/login/LoginPage.dart';
-import 'package:yourcourt/src/Screens/PerfilScreen.dart';
-import 'package:yourcourt/src/Utiles/principal_structure.dart';
+import 'package:yourcourt/src/utils/headers.dart';
+import 'package:yourcourt/src/utils/menu.dart';
+import 'package:yourcourt/src/screens/login/LoginPage.dart';
+import 'package:yourcourt/src/utils/principal_structure.dart';
 
 void main() => runApp(MyApp());
 
@@ -50,7 +48,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Principal(context, sharedPreferences, appHeadboard(context, sharedPreferences), body(), MenuLateral());
+    return principal(context, sharedPreferences, appHeadboard(context, sharedPreferences), body(), MenuLateral());
   }
 
   Widget body() {
