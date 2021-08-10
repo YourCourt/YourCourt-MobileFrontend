@@ -4,14 +4,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yourcourt/main.dart';
-import 'package:yourcourt/src/Screens/CoursesScreen.dart';
-import 'package:yourcourt/src/Screens/CourtsScreen.dart';
+import 'package:yourcourt/src/screens/CoursesScreen.dart';
+import 'package:yourcourt/src/screens/CourtsScreen.dart';
 import 'package:http/http.dart' as http;
-import 'package:yourcourt/src/Screens/MyInscriptionsScreen.dart';
-import 'package:yourcourt/src/Screens/NewsScreen.dart';
-import 'package:yourcourt/src/Screens/ProductTransactionsScreen.dart';
-import 'package:yourcourt/src/Screens/ProductsScreen.dart';
-import 'package:yourcourt/src/Screens/bookingScreen/MyBooksScreen.dart';
+import 'package:yourcourt/src/screens/MyInscriptionsScreen.dart';
+import 'package:yourcourt/src/screens/NewsScreen.dart';
+import 'package:yourcourt/src/screens/ProductTransactionsScreen.dart';
+import 'package:yourcourt/src/screens/ProductsScreen.dart';
+import 'package:yourcourt/src/screens/bookingScreen/MyBooksScreen.dart';
 import 'package:yourcourt/src/models/User.dart';
 
 

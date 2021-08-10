@@ -43,22 +43,6 @@ class _BookingPageState extends State<BookingPage> {
 
   String _date;
 
-  List<BookDate> possibiltyHours = [
-    BookDate('8:30', '10:00'),
-    BookDate('10:00', '11:00'),
-    BookDate('11:00', '12:00'),
-    BookDate('12:00', '13:00'),
-    BookDate('13:00', '14:00'),
-    BookDate('14:00', '15:00'),
-    BookDate('15:00', '16:00'),
-    BookDate('16:00', '17:00'),
-    BookDate('17:00', '18:00'),
-    BookDate('18:00', '19:00'),
-    BookDate('19:00', '20:00'),
-    BookDate('20:00', '21:00'),
-    BookDate('21:00', '22:00'),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return principal(context, sharedPreferences, appHeadboard(context, sharedPreferences), body(), MenuLateral());
@@ -92,8 +76,7 @@ class _BookingPageState extends State<BookingPage> {
             });
           },
         ),
-
-        SelectHour(_date, widget.court),
+        SelectHour(date: _date, court: widget.court),
 
       ],
     );
@@ -101,15 +84,23 @@ class _BookingPageState extends State<BookingPage> {
 
 }
 
-class SelectHour extends StatelessWidget {
+
+class SelectHour extends StatefulWidget {
+
   final String date;
   final Court court;
 
-  SelectHour(this.date, this.court);
+  const SelectHour({Key key, this.date, this.court,}) : super(key: key);
+
+  @override
+  _SelectHourState createState() => _SelectHourState();
+}
+
+class _SelectHourState extends State<SelectHour> {
 
   BookDate _selectedHour;
 
-  List<BookDate> possibiltyHours = [
+  List<BookDate> possibilityHours = [
     BookDate('08:30', '10:00'),
     BookDate('10:00', '11:00'),
     BookDate('11:00', '12:00'),
@@ -128,17 +119,19 @@ class SelectHour extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if(date!=null){
+    if (widget.date != null) {
       return FutureBuilder(
-          future: getAvailableHours(court.id, date),
-          builder: (context, snapshot){
-            if(snapshot.hasData){
-              if(_selectedHour!=null){
-                Text(_selectedHour.startHour+" -> "+_selectedHour.endHour, style: TextStyle(color: Colors.black),);
+          future: getAvailableHours(widget.court.id, widget.date),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              if (_selectedHour != null) {
+                Text(_selectedHour.startHour + " -> " + _selectedHour.endHour,
+                  style: TextStyle(color: Colors.black),);
               }
-              else{
+              else {
                 return ElevatedButton(
-                    child: Text("Seleccionar hora", style: TextStyle(color: Colors.white),),
+                    child: Text("Seleccionar hora",
+                      style: TextStyle(color: Colors.white),),
                     onPressed: () {
                       showModalBottomSheet(
                           isScrollControlled: true,
@@ -146,7 +139,8 @@ class SelectHour extends StatelessWidget {
                           builder: (context) {
                             return Column(
                               mainAxisSize: MainAxisSize.min,
-                              children: showAvailableHours(context, snapshot.data),
+                              children: showAvailableHours(context, snapshot
+                                  .data),
                             );
                           }
                       );
@@ -154,30 +148,32 @@ class SelectHour extends StatelessWidget {
                 );
               }
             }
-            return Container(
-              child: Text("No disponible", style: TextStyle(color: Colors.black),),
-            );
+            return CircularProgressIndicator();
           }
       );
     }
     return Container(
-      child: Text("Debe seleccionar una fecha para poder seleccionar la hora", style: TextStyle(color: Colors.black),),
+      child: Text("Debe seleccionar una fecha para poder seleccionar la hora",
+        style: TextStyle(color: Colors.black),),
     );
-
   }
 
   Future<List<BookDate>> getAvailableHours(int courtId, String date) async {
-
-    List<BookDate> availableHours = possibiltyHours;
+    List<BookDate> availableHours = possibilityHours;
 
     print(DateTime.now());
-    if(DateTime.now().toString().contains(date)){
-      availableHours.removeWhere((element) => getDoubleNumber(element.startHour)<DateTime.now().hour.toDouble());
+    if (DateTime.now().toString().contains(date)) {
+      availableHours.removeWhere((element) =>
+      getDoubleNumber(element.startHour) < DateTime
+          .now()
+          .hour
+          .toDouble());
     }
 
     var jsonResponse;
     var response = await http.get(
-        "https://dev-yourcourt-api.herokuapp.com/bookings/date?courtId="+ courtId.toString() + "&date=" + date,
+        "https://dev-yourcourt-api.herokuapp.com/bookings/date?courtId=" +
+            courtId.toString() + "&date=" + date,
         headers: {
           "Accept": "application/json",
           "Content-type": "application/json"
@@ -186,17 +182,15 @@ class SelectHour extends StatelessWidget {
     if (response.statusCode == 200) {
       jsonResponse = transformUtf8(response.bodyBytes);
     }
-    for (var book in jsonResponse){
-
+    for (var book in jsonResponse) {
       availableHours.remove(BookDate(book[0], book[1]));
-
     }
 
     return availableHours;
-
   }
 
-  List<Widget> showAvailableHours(BuildContext context, List<BookDate> availableHours) {
+  List<Widget> showAvailableHours(BuildContext context,
+      List<BookDate> availableHours) {
     List<Widget> hours = [];
 
     for (var hour in availableHours) {
@@ -204,10 +198,13 @@ class SelectHour extends StatelessWidget {
           Expanded(
             child: ListTile(
               leading: new Icon(Icons.wysiwyg),
-              title: Text(hour.startHour+" -> "+hour.endHour, style: TextStyle(color: Colors.black),),
+              title: Text(hour.startHour + " -> " + hour.endHour,
+                style: TextStyle(color: Colors.black),),
               onTap: () {
-                _selectedHour=hour;
-                  Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => BookConfirmation(date: date, hour: _selectedHour, court: court,)));
+                _selectedHour = hour;
+                Navigator.push(context, MaterialPageRoute(
+                    builder: (BuildContext context) => BookConfirmation(
+                      date: widget.date, hour: _selectedHour, court: widget.court,)));
               },
             ),
           )
@@ -217,16 +214,10 @@ class SelectHour extends StatelessWidget {
     return hours;
   }
 
-  String getHourMessage(List<String> horas){
-    for (var i in horas){
-      return i +'\n';
-    }
-  }
-
   double getDoubleNumber(String number) {
     List<String> array = [];
     array = number.split(":");
-    String numberToParse = array[0].trim()+"."+array[1].trim();
+    String numberToParse = array[0].trim() + "." + array[1].trim();
     double numberToDouble = double.parse(numberToParse);
     return numberToDouble;
   }
