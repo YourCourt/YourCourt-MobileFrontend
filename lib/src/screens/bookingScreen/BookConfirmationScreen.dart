@@ -133,7 +133,7 @@ class _BookConfirmationState extends State<BookConfirmation> {
         "https://dev-yourcourt-api.herokuapp.com/bookings",
         body: json.encode(data),
         headers: {
-          "Authorization": "Bearer ${token}",
+          "Authorization": "Bearer $token",
           "Accept": "application/json",
           "Content-type": "application/json"
         });
