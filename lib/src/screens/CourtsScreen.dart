@@ -40,60 +40,81 @@ class _CourtsPageState extends State<CourtsPage> {
   }
 
   Widget body() {
-    return FutureBuilder <List<Court>>(
-        future: getCourts(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return GridView.count(
-              crossAxisCount: 2,
-              children: listCourts(snapshot.data),
-            );
-          } else {
-            return CircularProgressIndicator();
-          }
-        }
+    return Center(
+      child: FutureBuilder <List<Court>>(
+            future: getCourts(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState==ConnectionState.done) {
+                return Column(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.only(top: 10.0),
+                      child: Text("Seleccione una pista para reservar", style: TextStyle(color: Color(
+                          0xFF9E7053), fontSize: 20.0, fontWeight: FontWeight.bold), ),
+                    ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    Expanded(
+                        child: listCourts(snapshot.data)),
+                  ],
+                );
+              } else {
+                return CircularProgressIndicator();
+              }
+            }
+        )
     );
   }
 
-  List<Widget> listCourts(List<Court> data){
+  Widget listCourts(List<Court> courts){
 
-    List<Widget> courts = [];
 
-    for (var court in data){
-      courts.add(
-          Container(
-            padding: const EdgeInsets.all(8),
-            child: Column(
-              children: [
-                GestureDetector(
-                  child: Image(
-                    image: NetworkImage(court.image.imageUrl),
-                    semanticLabel: court.courtType,
+    if(courts!=null){
+      return ListView.builder(
+          itemCount: courts.length,
+          itemBuilder: (context, int index){
+            return Container(
+              padding: const EdgeInsets.all(4),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    child: Image(
+                      height: 250,
+                      width: 250,
+                      image: NetworkImage(courts.elementAt(index).image.imageUrl),
+                      semanticLabel: courts.elementAt(index).courtType,
+                    ),
+                    onTap: () {
+                      showModalBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            return ListTile(
+                              leading: new Icon(Icons.wysiwyg),
+                              title: Text("Reservar", style: TextStyle(color: Colors.black),),
+                              onTap: () {
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => BookingPage(court: courts.elementAt(index),)));
+                              },
+                            );
+                          }
+                      );
+                    },
                   ),
-                  onTap: () {
-                    showModalBottomSheet(
-                        context: context,
-                        builder: (context) {
-                          return ListTile(
-                            
-                                  leading: new Icon(Icons.wysiwyg),
-                                  title: Text("Reservar", style: TextStyle(color: Colors.black),),
-                                  onTap: () {
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => BookingPage(court: court,)));
-                                  },
-                                );
-                        }
-                    );
-                  },
-                ),
-                Text(court.name, style: TextStyle(color: Colors.black), 
-                ),
-              ],
-            ),
-          ))
-      ;
+                  Text(courts.elementAt(index).name, style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 10.0,),
+                ],
+              ),
+            );
+          }
+      );
+    } else {
+      return Container(
+        child: Text("No hay pistas disponibles"),
+      );
     }
-    return courts;
+
 
   }
 

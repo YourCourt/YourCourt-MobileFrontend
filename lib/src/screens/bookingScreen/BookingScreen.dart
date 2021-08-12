@@ -49,52 +49,49 @@ class _BookingPageState extends State<BookingPage> {
   }
 
   Widget body() {
-    return Column(
-      children: [
-        Text(
-          'Fecha de reserva:',
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 20, color: Colors.black),
-        ),
-        SizedBox(height: 10.0),
-        Text(_date == null ? 'No hay ninguna fecha seleccionada' : _date),
-        SizedBox(height: 10.0),
-        ElevatedButton(
-          child: Text("Seleccione el día de la reserva"),
-          onPressed: () {
-            showDatePicker(
-                    context: context,
-                    initialDate: DateTime.now(),
-                    firstDate: DateTime.now(),
-                    lastDate: DateTime.now().add(Duration(days: 7)))
-                .then((date) {
-              setState(() {
-                _date = DateFormat('yyyy-MM-dd').format(date);
+    return Center(
+      child: Column(
+        children: [
+          SizedBox(height: 10.0,),
+          Text(
+            'Fecha de reserva:',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 20, color: Colors.black),
+          ),
+          SizedBox(height: 10.0),
+          Text(_date == null ? 'No hay ninguna fecha seleccionada' : _date),
+          SizedBox(height: 10.0),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              primary: Color(0xFFBB856E),
+            ),
+            child: Text("Seleccione el día de la reserva"),
+            onPressed: () {
+              showDatePicker(
+                  context: context,
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime.now(),
+                  lastDate: DateTime.now().add(Duration(days: 7)))
+                  .then((date) {
+                setState(() {
+                  _date = DateFormat('yyyy-MM-dd').format(date);
+                });
               });
-            });
-          },
-        ),
-        SelectHour(date: _date, court: widget.court),
-      ],
+            },
+          ),
+          SelectHour(_date, widget.court),
+        ],
+      ),
     );
   }
 }
 
-class SelectHour extends StatefulWidget {
+class SelectHour extends StatelessWidget {
   final String date;
   final Court court;
 
-  const SelectHour({
-    Key key,
-    this.date,
-    this.court,
-  }) : super(key: key);
+  SelectHour(this.date, this.court);
 
-  @override
-  _SelectHourState createState() => _SelectHourState();
-}
-
-class _SelectHourState extends State<SelectHour> {
   BookDate _selectedHour;
 
   List<BookDate> possibilityHours = [
@@ -115,9 +112,9 @@ class _SelectHourState extends State<SelectHour> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.date != null) {
+    if (date != null) {
       return FutureBuilder(
-          future: getAvailableHours(widget.court.id, widget.date),
+          future: getAvailableHours(court.id, date),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               if (_selectedHour != null) {
@@ -127,6 +124,9 @@ class _SelectHourState extends State<SelectHour> {
                 );
               } else {
                 return ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: Color(0xFFDBA58F),
+                    ),
                     child: Text(
                       "Seleccionar hora",
                       style: TextStyle(color: Colors.white),
@@ -134,6 +134,7 @@ class _SelectHourState extends State<SelectHour> {
                     onPressed: () {
                       showModalBottomSheet(
                           isScrollControlled: true,
+
                           context: context,
                           builder: (context) {
                             return Column(
@@ -204,9 +205,9 @@ class _SelectHourState extends State<SelectHour> {
                 context,
                 MaterialPageRoute(
                     builder: (BuildContext context) => BookConfirmation(
-                          date: widget.date,
+                          date: date,
                           hour: _selectedHour,
-                          court: widget.court,
+                          court: court,
                         )));
           },
         ),

@@ -59,39 +59,52 @@ class _BookConfirmationState extends State<BookConfirmation> {
   );
 
   Widget body() {
-    return Column(
-      children: [
-        Text(widget.date, style: TextStyle(color: Colors.black),),
-        Text(widget.hour.startHour + " -> " + widget.hour.endHour,
-          style: TextStyle(color: Colors.black),),
-        Text("Productos alquilados: ", style: TextStyle(color: Colors.black),),
-        Expanded(
-          child: SizedBox(
-            height: 200,
-            child: showBookProducts(widget.productsBooking),
+    return Center(
+      child: Column(
+        children: [
+          SizedBox(height: 10.0,),
+          Text("Fecha de la reserva:  ", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w400, fontSize: 20.0),),
+          SizedBox(height: 5.0,),
+          Text(widget.date, style: TextStyle(color: Colors.black),),
+          SizedBox(height: 10.0,),
+          Text("Hora:  ", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w400,fontSize: 20.0)),
+          SizedBox(height: 5.0,),
+          Text(widget.hour.startHour + " -> " + widget.hour.endHour,
+            style: TextStyle(color: Colors.black),),
+          SizedBox(height: 20.0,),
+          Text("Productos alquilados: ", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w400, fontSize: 20.0),),
+          SizedBox(height: 5.0,),
+          Expanded(
+              child: showBookProducts(widget.productsBooking),
+            ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              primary: Color(0xFFDBA58F),
+            ),
+            onPressed: (){
+              //Un stateFul widget que realice las operaciones de alquilar los productos
+              Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ProductBooking(court: widget.court, date: widget.date, hour: widget.hour, )));
+            },
+            child: Text("Alquilar productos", style: TextStyle(color: Colors.white),),
           ),
-        ),
-        ElevatedButton(
-          onPressed: (){
-            //Un stateFul widget que realice las operaciones de alquilar los productos
-            Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ProductBooking(court: widget.court, date: widget.date, hour: widget.hour, )));
-          },
-          child: Text("Alquilar productos", style: TextStyle(color: Colors.black),),
-        ),
-        ElevatedButton(
-            onPressed: () async {
-              //Si se produce algún error en la reserva, mostrarlo.
-              Response r = await confirmBook();
-              if(r.statusCode == 201){
-                Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => MainPage()));
-              } else{
-                print("Se ha producido un error: " + r.body);
-              }
+          ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: Color(0xFFBB856E),
+              ),
+              onPressed: () async {
+                //Si se produce algún error en la reserva, mostrarlo.
+                Response r = await confirmBook();
+                if(r.statusCode == 201){
+                  Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => MainPage()));
+                } else{
+                  print("Se ha producido un error: " + r.body);
+                }
 
               },
-            child: Text(
-              "Confirmar reserva", style: TextStyle(color: Colors.black),)),
-      ],
+              child: Text(
+                "Confirmar reserva", style: TextStyle(color: Colors.white),)),
+        ],
+      ),
     );
   }
 
@@ -151,6 +164,7 @@ class _BookConfirmationState extends State<BookConfirmation> {
   Widget showBookProducts(List<ProductBookingLine> productsBooking){
     if(productsBooking!=null){
       return ListView.builder(
+        shrinkWrap: true,
           itemCount: productsBooking.length,
           itemBuilder: (BuildContext context, int index){
             return FutureBuilder(
