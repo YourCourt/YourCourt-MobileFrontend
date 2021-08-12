@@ -1,5 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
+import 'package:yourcourt/main.dart';
 import 'package:yourcourt/src/screens/ShoppingPurchaseProductScreen.dart';
 import 'package:yourcourt/src/screens/login/LoginPage.dart';
 import 'package:yourcourt/src/screens/PerfilScreen.dart';
@@ -8,7 +9,25 @@ import '../vars.dart';
 
 Widget appHeadboard(BuildContext context, SharedPreferences sharedPreferences) {
   return AppBar(
-    title: Text("YourCourt", style: TextStyle(color: Colors.white)),
+    backgroundColor: Color(0xFFDBA58F),
+    title: TextButton(
+      onPressed: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => MainPage()));
+      },
+      child: Row(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8.0),
+            child: Image(
+              width: 40.0,
+              height: 25.0,
+              image: AssetImage('assets/yourcourt_logo.png'),
+            ),
+          ),
+          Text("YourCourt", style: TextStyle(color: Colors.white, fontSize: 20.0)),
+        ],
+      ),
+    ),
     actions: <Widget>[
       TextButton(
         onPressed: () {
@@ -18,7 +37,7 @@ Widget appHeadboard(BuildContext context, SharedPreferences sharedPreferences) {
           productPurchaseLines = [];
           Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => LoginPage()), (Route<dynamic> route) => false);
         },
-        child: Text("Log Out", style: TextStyle(color: Colors.white)),
+        child: Text("Salir", style: TextStyle(color: Colors.white)),
       ),
       TextButton(
         onPressed: () {
@@ -36,7 +55,7 @@ Widget appHeadboard(BuildContext context, SharedPreferences sharedPreferences) {
             ),
             if (productPurchaseLines.length > 0)
               Padding(
-                padding: const EdgeInsets.only(left: 2.0),
+                padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 2),
                 child: CircleAvatar(
                   radius: 6.0,
                   backgroundColor: Colors.red,

@@ -8,6 +8,7 @@ import 'package:yourcourt/src/models/User.dart';
 import 'package:yourcourt/src/screens/PerfilScreen.dart';
 import 'package:yourcourt/src/utils/headers.dart';
 import 'package:yourcourt/src/utils/menu.dart';
+import 'package:yourcourt/src/utils/toast_messages.dart';
 import 'login/LoginPage.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -247,8 +248,7 @@ class _PerfilUpdateState extends State<PerfilUpdate> {
 
     if (response.statusCode == 200) {
       print("Perfil de usuario actualizado");
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('¡Perfil actualizado!')));
+      showMessage('¡Perfil actualizado!', context);
     } else {
       print(
           "Se ha producido un error al actualizar el usuario" + response.body);

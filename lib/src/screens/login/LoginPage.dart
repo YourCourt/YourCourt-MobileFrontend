@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yourcourt/src/utils/already_have_an_account_check.dart';
 import 'package:yourcourt/src/utils/functions.dart';
+import 'package:yourcourt/src/utils/toast_messages.dart';
 import '../../../main.dart';
 import 'SignUpPage.dart';
 
@@ -78,6 +79,7 @@ class _LoginPageState extends State<LoginPage> {
       }
     }
     else {
+      showMessage('Usuario y/o contraseña incorrectos', context);
       setState(() {
         _isLoading = false;
       });
@@ -115,11 +117,7 @@ class _LoginPageState extends State<LoginPage> {
       height: 40.0,
       padding: EdgeInsets.symmetric(horizontal: 15.0),
       margin: EdgeInsets.only(top: 15.0),
-      child: ElevatedButton(
-        onPressed: () {
-          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) =>   SignUpPage()), (Route<dynamic> route) => false);
-        },
-        child: AlreadyHaveAnAccountCheck(
+      child: AlreadyHaveAnAccountCheck(
           login: true,
           press: () {
             Navigator.push(
@@ -132,8 +130,6 @@ class _LoginPageState extends State<LoginPage> {
             );
           },
         ),
-
-      ),
     );
   }
   Container buttonSection() {
@@ -149,7 +145,7 @@ class _LoginPageState extends State<LoginPage> {
           });
           signIn(usernameController.text, passwordController.text);
         },
-        child: Text("Sign In", style: TextStyle(color: Colors.white70)),
+        child: Text("Acceder", style: TextStyle(color: Colors.white70)),
       ),
     );
   }
@@ -165,9 +161,9 @@ class _LoginPageState extends State<LoginPage> {
           TextFormField(
             controller: usernameController,
             cursorColor: Colors.white,
-            style: TextStyle(color: Colors.black),
+            style: TextStyle(color: Colors.white70),
             decoration: InputDecoration(
-              icon: Icon(Icons.verified_user, color: Colors.white70),
+              icon: Icon(Icons.account_circle_rounded, color: Colors.white70),
               hintText: "Nombre de usuario",
               border: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white70)),
               hintStyle: TextStyle(color: Colors.white70),
@@ -195,11 +191,21 @@ class _LoginPageState extends State<LoginPage> {
     return Container(
       margin: EdgeInsets.only(top: 50.0),
       padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
-      child: Text("YourCourt",
-          style: TextStyle(
-              color: Colors.white70,
-              fontSize: 40.0,
-              fontWeight: FontWeight.bold)),
+      child: Row(
+        children: [
+          Image(
+            width: 50.0,
+            height: 35.0,
+            image: AssetImage('assets/yourcourt_logo.png'),
+          ),
+          SizedBox(width: 50.0,),
+          Text("YourCourt",
+              style: TextStyle(
+                  color: Colors.white70,
+                  fontSize: 40.0,
+                  fontWeight: FontWeight.bold)),
+        ],
+      ),
     );
   }
 
