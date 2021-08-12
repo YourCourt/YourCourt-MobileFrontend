@@ -59,6 +59,7 @@ class _NewsPageState extends State<NewsPage> {
           itemBuilder: (context, int index){
             return Column(
               children: [
+                Text(news.elementAt(index).name, style: TextStyle(color: Colors.black),),
                 Image(
                   image: NetworkImage(news.elementAt(index).image.imageUrl),
                 ),
@@ -95,7 +96,6 @@ class _NewsPageState extends State<NewsPage> {
                       );
                   },
                 ),
-                Text(news.elementAt(index).name, style: TextStyle(color: Colors.black),),
                 Text("Fecha de publicación: " + news.elementAt(index).creationDate, style: TextStyle(color: Colors.black),),
                 Text(news.elementAt(index).description, style: TextStyle(color: Colors.black),),
 
