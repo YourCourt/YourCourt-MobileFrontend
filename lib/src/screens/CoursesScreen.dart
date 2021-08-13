@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:yourcourt/src/utils/menu.dart';
@@ -12,7 +11,6 @@ import 'package:yourcourt/src/utils/headers.dart';
 import 'InscriptionFormScreen.dart';
 
 class Courses extends StatefulWidget {
-
   @override
   _CoursesState createState() => _CoursesState();
 }
@@ -22,98 +20,163 @@ class _CoursesState extends State<Courses> {
 
   @override
   Widget build(BuildContext context) {
-    return principal(context, sharedPreferences, appHeadboard(context, sharedPreferences), body(), MenuLateral());
+    return principal(context, sharedPreferences,
+        appHeadboard(context, sharedPreferences), body(), MenuLateral());
   }
 
   Widget body() {
-    return FutureBuilder <List<Course>>(
+    return FutureBuilder<List<Course>>(
         future: getCourses(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return GridView.count(
-              crossAxisCount: 2,
-              children: [
-                showCourses(snapshot.data),
-              ]
-            );
+            return Column(children: [
+              Expanded(
+                child: showCourses(snapshot.data),
+              ),
+            ]);
           } else {
             return Container(
               child: Text("No existen cursos disponibles"),
             );
           }
-        }
-    );
+        });
   }
 
-  Widget showCourses(List<Course> courses){
+  Widget showCourses(List<Course> courses) {
     return ListView.builder(
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
         itemCount: courses.length,
         itemBuilder: (BuildContext context, int index) {
-          if(DateTime.now().isAfter(DateTime.parse(courses.elementAt(index).startDate))){
+          if (DateTime.now()
+              .isAfter(DateTime.parse(courses.elementAt(index).startDate))) {
             return Column(
               children: [
-                Text(courses
-                    .elementAt(index)
-                    .title, style: TextStyle(color: Colors.black),),
-                Text(courses
-                    .elementAt(index)
-                    .description, style: TextStyle(color: Colors.black),),
-                Text("Desde " + courses
-                    .elementAt(index)
-                    .startDate + " hasta " + courses
-                    .elementAt(index)
-                    .endDate, style: TextStyle(color: Colors.black),),
+                SizedBox(
+                  height: 10.0,
+                ),
+                Text(
+                  courses.elementAt(index).title,
+                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 20.0),
+                ),
+                SizedBox(
+                  height: 5.0,
+                ),
+                Text(
+                  courses.elementAt(index).description,
+                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.w300),
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      " Desde ",
+                      style: TextStyle(color: Colors.black, fontWeight: FontWeight.w300),
+                    ),
+                    Text(
+                      courses.elementAt(index).startDate,
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    Text(
+                      " hasta ",
+                      style: TextStyle(color: Colors.black, fontWeight: FontWeight.w300),
+                    ),
+                    Text(
+                      courses.elementAt(index).endDate,
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
                 ElevatedButton(
-                    onPressed: (){
-
-                      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) =>   InscriptionForm(courseId:courses
-                          .elementAt(index).id ,)));
-                    },
-                    child: Text("Inscribirse", style: TextStyle(color: Colors.black),),)
+                  style: ElevatedButton.styleFrom(
+                    primary: Color(0xFFDBA58F),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) => InscriptionForm(
+                                  courseId: courses.elementAt(index).id,
+                                )));
+                  },
+                  child: Text(
+                    "Inscribirse",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                SizedBox(
+                  height: 20.0,
+                ),
               ],
             );
           } else {
             return Column(
               children: [
-                Text(courses
-                    .elementAt(index)
-                    .title, style: TextStyle(color: Colors.black),),
-                Text(courses
-                    .elementAt(index)
-                    .description, style: TextStyle(color: Colors.black),),
-                Text(courses
-                    .elementAt(index)
-                    .startDate, style: TextStyle(color: Colors.black),),
-                Text("Desde " + courses
-                    .elementAt(index)
-                    .startDate + " hasta " + courses
-                    .elementAt(index)
-                    .endDate, style: TextStyle(color: Colors.black),),
+                SizedBox(
+                  height: 10.0,
+                ),
+                Text(
+                  courses.elementAt(index).title,
+                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 20.0),
+                ),
+                SizedBox(
+                  height: 5.0,
+                ),
+                Text(
+                  courses.elementAt(index).description,
+                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.w300),
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      " Desde ",
+                      style: TextStyle(color: Colors.black, fontWeight: FontWeight.w300),
+                    ),
+                    Text(
+                      courses.elementAt(index).startDate,
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    Text(
+                      " hasta ",
+                      style: TextStyle(color: Colors.black, fontWeight: FontWeight.w300),
+                    ),
+                    Text(
+                      courses.elementAt(index).endDate,
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 20.0,
+                ),
               ],
             );
           }
-        }
-    );
-
+        });
   }
 
   Future<List<Course>> getCourses() async {
     List<Course> courses = [];
 
     var jsonResponse;
-    var response = await http.get(
-        "https://dev-yourcourt-api.herokuapp.com/courses");
+    var response =
+        await http.get("https://dev-yourcourt-api.herokuapp.com/courses");
     if (response.statusCode == 200) {
       jsonResponse = transformUtf8(response.bodyBytes);
     }
     for (var item in jsonResponse) {
-
       courses.add(Course.fromJson(item));
     }
     return courses;
-
   }
-
 }

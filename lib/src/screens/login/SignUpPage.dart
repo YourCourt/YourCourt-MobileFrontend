@@ -101,25 +101,25 @@ class _SignUpPageState extends State<SignUpPage> {
       new TextEditingController();
 
   Container headerSection() {
-    return Container(
-      alignment: Alignment.topLeft,
-      padding: EdgeInsets.only(left: 10.0),
-      child: Row(
-        children: [
-          Image(
-            width: 50.0,
+      return Container(
+        alignment: Alignment.topLeft,
+        padding: EdgeInsets.only(left: 10.0),
+        child: Row(
+          children: [
+            Image(
+              width: 50.0,
               height: 35.0,
               image: AssetImage('assets/yourcourt_logo.png'),
-          ),
-          SizedBox(width: 50.0,),
-          Text("YourCourt",
-              style: TextStyle(
-                  color: Colors.white70,
-                  fontSize: 40.0,
-                  fontWeight: FontWeight.bold)),
-        ],
-      ),
-    );
+            ),
+            SizedBox(width: 50.0,),
+            Text("YourCourt",
+                style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: 40.0,
+                    fontWeight: FontWeight.bold)),
+          ],
+        ),
+      );
   }
   final _formKey = GlobalKey<FormState>();
 
@@ -141,7 +141,7 @@ class _SignUpPageState extends State<SignUpPage> {
               cursorColor: Colors.white,
               style: TextStyle(color: Colors.white),
               decoration: InputDecoration(
-                icon: Icon(Icons.verified_user, color: Colors.white70),
+                icon: Icon(Icons.account_circle_rounded, color: Colors.white70),
                 hintText: "Nombre de usuario",
                 border: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.white70)),
@@ -197,7 +197,7 @@ class _SignUpPageState extends State<SignUpPage> {
               controller: phoneController,
               keyboardType: TextInputType.phone,
               validator: (value) {
-                String mobilePattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
+                String mobilePattern = r'^(([+][(][0-9]{1,3}[)][ ])?([0-9]{6,12}))$';
                 RegExp regExp = new RegExp(mobilePattern);
                 if (value.length == 0) {
                   return 'Por favor, introduzca un número de teléfono';
@@ -209,7 +209,7 @@ class _SignUpPageState extends State<SignUpPage> {
               cursorColor: Colors.white,
               style: TextStyle(color: Colors.white70),
               decoration: InputDecoration(
-                icon: Icon(Icons.phone, color: Colors.white70),
+                icon: Icon(Icons.phone_android_outlined, color: Colors.white70),
                 hintText: "Teléfono",
                 border: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.white70)),
@@ -232,7 +232,7 @@ class _SignUpPageState extends State<SignUpPage> {
               cursorColor: Colors.white,
               style: TextStyle(color: Colors.white70),
               decoration: InputDecoration(
-                icon: Icon(Icons.phone_android, color: Colors.white70),
+                icon: Icon(Icons.supervised_user_circle, color: Colors.white70),
                 hintText: "Número de socio",
                 border: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.white70)),
