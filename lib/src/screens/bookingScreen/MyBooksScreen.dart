@@ -53,7 +53,9 @@ class _MyBooksState extends State<MyBooks> {
               ),
             );
           } else {
-            return Container();
+            return Center(
+              child: CircularProgressIndicator(),
+            );
           }
         });
   }
@@ -202,7 +204,9 @@ class _MyBooksState extends State<MyBooks> {
             );
           });
     } else {
-      return Container(child: Text("No hay ninguna reserva realizada"));
+      return Center(
+        child: Container(child: Text("No hay ninguna reserva realizada")),
+      );
     }
   }
 

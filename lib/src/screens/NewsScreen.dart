@@ -58,11 +58,15 @@ class _NewsPageState extends State<NewsPage> {
           itemCount: news.length,
           itemBuilder: (context, int index){
             return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(news.elementAt(index).name, style: TextStyle(color: Colors.black),),
+                SizedBox(height: 10.0,),
+                Text(news.elementAt(index).name, style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600, fontSize: 25.0), textAlign: TextAlign.center,),
+                SizedBox(height: 10.0,),
                 Image(
                   image: NetworkImage(news.elementAt(index).image.imageUrl),
                 ),
+                SizedBox(height: 5.0,),
                 GestureDetector(
                   child: Stack(
                     alignment: Alignment.bottomLeft,
@@ -96,10 +100,14 @@ class _NewsPageState extends State<NewsPage> {
                       );
                   },
                 ),
-                Text("Fecha de publicación: " + news.elementAt(index).creationDate, style: TextStyle(color: Colors.black),),
-                Text(news.elementAt(index).description, style: TextStyle(color: Colors.black),),
-
-
+                SizedBox(
+                  height: 15.0,
+                ),
+                Text("Fecha de publicación: " + news.elementAt(index).creationDate, style: TextStyle(color: Colors.black, fontWeight: FontWeight.w300),),
+                SizedBox(
+                  height: 20.0,
+                ),
+                Text(news.elementAt(index).description,textAlign: TextAlign.justify, style: TextStyle(color: Colors.black), ),
 
               ],
             );

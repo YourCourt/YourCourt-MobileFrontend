@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:yourcourt/src/screens/CourtsScreen.dart';
+import 'package:yourcourt/src/screens/ProductsScreen.dart';
 import 'package:yourcourt/src/utils/headers.dart';
 import 'package:yourcourt/src/utils/menu.dart';
 import 'package:yourcourt/src/screens/login/LoginPage.dart';
@@ -81,7 +83,10 @@ class _MainPageState extends State<MainPage> {
                       style: ElevatedButton.styleFrom(
                         primary: Colors.amberAccent,
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).push(
+                            MaterialPageRoute(builder: (BuildContext context) => Products()));
+                      },
                       child: Text(
                         "Ir a productos",
                         style: TextStyle(
@@ -123,7 +128,10 @@ class _MainPageState extends State<MainPage> {
                       style: ElevatedButton.styleFrom(
                         primary: Colors.amberAccent,
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).push(
+                            MaterialPageRoute(builder: (BuildContext context) => CourtsPage()));
+                      },
                       child: Text(
                         "Ir a pistas",
                         style: TextStyle(

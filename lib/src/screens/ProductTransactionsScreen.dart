@@ -44,15 +44,21 @@ class _ProductTransactionsState extends State<ProductTransactions> {
     return FutureBuilder(
         future: getTransactions(),
         builder: (context, snapshot){
-          if (snapshot.connectionState==ConnectionState.done) {
-            return GridView.count(
-              crossAxisCount: 2,
+          if (snapshot.hasData) {
+            return Column(
               children: [
-                showTransactions(snapshot.data),
+                Expanded(
+                    child: showTransactions(snapshot.data),
+                ),
+
               ]
             );
           } else {
-            return CircularProgressIndicator();
+            return Center(
+              child: Container(
+                child: Text("No hay transacciones"),
+              ),
+            );
           }
         }
     );
@@ -72,6 +78,9 @@ class _ProductTransactionsState extends State<ProductTransactions> {
               return Container(
                 child: Column(
                   children: [
+                    SizedBox(height: 10,),
+                    Text("Transacción número " + (index+1).toString(), style: TextStyle(color: Colors.black, fontWeight: FontWeight.w400),),
+                    SizedBox(height: 10,),
                     ListView.builder(
                       controller: _controller,
                         shrinkWrap: true,
@@ -84,23 +93,55 @@ class _ProductTransactionsState extends State<ProductTransactions> {
                                   return Column(
                                       children: [
                                         Image(
-                                          fit: BoxFit.fitHeight,
-                                          image: NetworkImage(snapshot.data.image.imageUrl),),
-                                        Text(snapshot.data.name, style: TextStyle(color: Colors.black),),
-                                        Text(snapshot.data.description, style: TextStyle(color: Colors.black),),
-                                        Text(snapshot.data.price.toString(), style: TextStyle(color: Colors.black),),
-                                        Text(snapshot.data.productType, style: TextStyle(color: Colors.black),),
-                                        Text(snapshot.data.stock.toString(), style: TextStyle(color: Colors.black),),
-                                        Text(purchasedProducts.elementAt(index).lines.elementAt(index).quantity.toString(), style: TextStyle(color: Colors.black),),
+                                          height: 300.0,
+                                          width: 300.0,
+                                          image: NetworkImage(snapshot.data.image.imageUrl),
+                                        ),
+                                        SizedBox(height: 5,),
+                                        Text(
+                                          snapshot.data.name,
+                                          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 15.0),
+                                        ),
+                                        SizedBox(height: 5,),
+                                        Text(
+                                          snapshot.data.description,
+                                          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w300),
+                                        ),
+                                        SizedBox(height: 5,),
+                                        Text("Precio: " +
+                                            snapshot.data.price.toString() + " €",
+                                          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w300),
+                                        ),
+
+                                        SizedBox(height: 5,),
+                                        Text("Impuestos: " +
+                                            snapshot.data.tax.toString() + " €",
+                                          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w300),
+                                        ),
+                                        SizedBox(height: 5,),
+                                        Text("Precio final: " +
+                                            snapshot.data.totalPrice.toString() + " €",
+                                          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w300),
+                                        ),
+                                        SizedBox(height: 5,),
+                                        Text("Tipo de producto: " +
+                                            snapshot.data.productType.toString(),
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w300),
+                                      ),
+                                        SizedBox(height: 5,),
+                                        Text("Cantidad: " + purchasedProducts.elementAt(index).lines.elementAt(index).quantity.toString(), style: TextStyle(color: Colors.black, fontWeight: FontWeight.w300),),
                                       ],
                                     );
                                 }
-                                return CircularProgressIndicator();
+                                return Container();
                               }
                           );
                         }
                     ),
                     Text("Total de la compra: " + purchasedProducts.elementAt(index).productPurchaseSum.toString(), style: TextStyle(color: Colors.black),),
+                    SizedBox(height: 15,),
                   ],
                 ),
               );
@@ -112,8 +153,10 @@ class _ProductTransactionsState extends State<ProductTransactions> {
       );
     }
     else{
-      return Container(
-          child: Text("No hay ninguna transacción realizada")
+      return Center(
+        child: Container(
+            child: Text("No hay ninguna transacción realizada")
+        ),
       );
     }
   }

@@ -260,8 +260,10 @@ class _ProductBookingState extends State<ProductBooking> {
             );
           });
     } else {
-      return Container(
-        child: Text("No hay productos alquilables"),
+      return Center(
+        child: Container(
+          child: Text("No hay productos alquilables"),
+        ),
       );
     }
   }

@@ -146,7 +146,11 @@ class SelectHour extends StatelessWidget {
                     });
               }
             }
-            return CircularProgressIndicator();
+            return Center(
+              child: Container(
+                child: Text("No hay horas disponibles"),
+              ),
+            );
           });
     }
     return Container(

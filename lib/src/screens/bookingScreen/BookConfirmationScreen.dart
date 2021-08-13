@@ -188,7 +188,9 @@ class _BookConfirmationState extends State<BookConfirmation> {
       );
     }
 
-    return Text("No hay productos añadidos", style: TextStyle(color: Colors.black),);
+    return Center(
+      child: Text("No hay productos añadidos", style: TextStyle(color: Colors.black),),
+    );
   }
 
   Future<String> getProduct(int id) async {
