@@ -5,11 +5,13 @@ import 'package:http/http.dart' as http;
 import 'package:yourcourt/src/models/Book.dart';
 import 'package:yourcourt/src/models/Court.dart';
 import 'package:yourcourt/src/models/Product.dart';
+import 'package:yourcourt/src/models/ProductBooking.dart';
 import 'package:yourcourt/src/models/ProductBookingLine.dart';
 import 'package:yourcourt/src/utils/headers.dart';
 import 'package:yourcourt/src/utils/functions.dart';
 import 'package:yourcourt/src/utils/menu.dart';
 import 'package:yourcourt/src/utils/principal_structure.dart';
+import 'package:yourcourt/src/utils/toast_messages.dart';
 
 import '../login/LoginPage.dart';
 
@@ -107,7 +109,7 @@ class _MyBooksState extends State<MyBooks> {
                         if(snapshot.connectionState==ConnectionState.done){
                           return Text("Pista reservada: " + snapshot.data.name, style: TextStyle(color: Colors.black));
                         }
-                        return CircularProgressIndicator();
+                        return Container();
                       }
                   ),
                   SizedBox(
@@ -131,7 +133,7 @@ class _MyBooksState extends State<MyBooks> {
                   SizedBox(
                     height: 5.0,
                   ),
-                  showBookProducts(books.elementAt(index).productBooking.lines),
+                  showBookProducts(books.elementAt(index).productBooking),
                   SizedBox(
                     height: 10.0,
                   ),
@@ -151,7 +153,7 @@ class _MyBooksState extends State<MyBooks> {
                                 books.elementAt(index).startDate))
                             ? null
                             : () {
-                                if (sharedPreferences.getInt("id") !=
+                                if (sharedPreferences.getInt("id") ==
                                         books.elementAt(index).userId ||
                                     sharedPreferences
                                             .getStringList("roles")
@@ -170,7 +172,7 @@ class _MyBooksState extends State<MyBooks> {
                                                 ),
                                                 onPressed: () async {
                                                   deleteBook(
-                                                      books.elementAt(index));
+                                                      books.elementAt(index), context);
                                                 },
                                                 child: Text("Si")),
                                             ElevatedButton(
@@ -210,14 +212,14 @@ class _MyBooksState extends State<MyBooks> {
     }
   }
 
-  Widget showBookProducts(List<ProductBookingLine> productsBooking) {
-    if (productsBooking.length != 0) {
+  Widget showBookProducts(ProductBooking productsBooking) {
+    if (productsBooking!=null) {
       return ListView.builder(
           shrinkWrap: true,
-          itemCount: productsBooking.length,
+          itemCount: productsBooking.lines.length,
           itemBuilder: (BuildContext context, int index) {
             return FutureBuilder<Product>(
-                future: getProduct(productsBooking.elementAt(index).productId),
+                future: getProduct(productsBooking.lines.elementAt(index).productId),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return Column(
@@ -228,7 +230,7 @@ class _MyBooksState extends State<MyBooks> {
                         ),
                         Text(
                           "Dto : " +
-                              productsBooking
+                              productsBooking.lines
                                   .elementAt(index)
                                   .discount
                                   .toString(),
@@ -236,7 +238,7 @@ class _MyBooksState extends State<MyBooks> {
                         ),
                         Text(
                           "Cantidad : " +
-                              productsBooking
+                              productsBooking.lines
                                   .elementAt(index)
                                   .quantity
                                   .toString(),
@@ -256,59 +258,8 @@ class _MyBooksState extends State<MyBooks> {
     }
   }
 
-  Widget listProducts(List<ProductBookingLine> products) {
-    ScrollController _controller = new ScrollController();
 
-    if (products.length > 0) {
-      return ListView.builder(
-          controller: _controller,
-          shrinkWrap: true,
-          itemCount: products.length,
-          itemBuilder: (BuildContext context, int index) {
-            return FutureBuilder(
-                future: getProduct(products.elementAt(index).productId),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    return Column(
-                      children: [
-                        Text(
-                          snapshot.data.name,
-                          style: TextStyle(color: Colors.black),
-                        ),
-                        Text(
-                          snapshot.data.description,
-                          style: TextStyle(color: Colors.black),
-                        ),
-                        Text(
-                          snapshot.data.price.toString(),
-                          style: TextStyle(color: Colors.black),
-                        ),
-                        Text(
-                          snapshot.data.productType,
-                          style: TextStyle(color: Colors.black),
-                        ),
-                        Text(
-                          snapshot.data.stock.toString(),
-                          style: TextStyle(color: Colors.black),
-                        ),
-                        Text(
-                          products.elementAt(index).quantity.toString(),
-                          style: TextStyle(color: Colors.black),
-                        ),
-                      ],
-                    );
-                  }
-                  return CircularProgressIndicator();
-                });
-          });
-    } else {
-      return SizedBox(
-        height: 5,
-      );
-    }
-  }
-
-  deleteBook(Book book) async {
+  deleteBook(Book book, BuildContext context) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
     var token = sharedPreferences.getString("token");
@@ -321,6 +272,7 @@ class _MyBooksState extends State<MyBooks> {
       setState(() {
         print("Se ha cancelado la reserva con éxito");
         Navigator.pop(context);
+        showMessage("La reserva ha sido cancelada", context);
       });
     } else {
       print("Ha ocurrido un error: " + response.body);

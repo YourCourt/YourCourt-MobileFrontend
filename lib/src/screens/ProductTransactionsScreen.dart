@@ -85,9 +85,9 @@ class _ProductTransactionsState extends State<ProductTransactions> {
                       controller: _controller,
                         shrinkWrap: true,
                         itemCount: purchasedProducts.elementAt(index).lines.length,
-                        itemBuilder: (BuildContext context, int index) {
+                        itemBuilder: (BuildContext context, int indexLines) {
                           return FutureBuilder(
-                              future: getProduct(purchasedProducts.elementAt(index).lines.elementAt(index).productId),
+                              future: getProduct(purchasedProducts.elementAt(index).lines.elementAt(indexLines).productId),
                               builder: (context, snapshot){
                                 if(snapshot.connectionState==ConnectionState.done){
                                   return Column(
@@ -115,7 +115,7 @@ class _ProductTransactionsState extends State<ProductTransactions> {
 
                                         SizedBox(height: 5,),
                                         Text("Impuestos: " +
-                                            snapshot.data.tax.toString() + " €",
+                                            snapshot.data.tax.toString() + " %",
                                           style: TextStyle(color: Colors.black, fontWeight: FontWeight.w300),
                                         ),
                                         SizedBox(height: 5,),
@@ -131,7 +131,7 @@ class _ProductTransactionsState extends State<ProductTransactions> {
                                             fontWeight: FontWeight.w300),
                                       ),
                                         SizedBox(height: 5,),
-                                        Text("Cantidad: " + purchasedProducts.elementAt(index).lines.elementAt(index).quantity.toString(), style: TextStyle(color: Colors.black, fontWeight: FontWeight.w300),),
+                                        Text("Cantidad: " + purchasedProducts.elementAt(index).lines.elementAt(indexLines).quantity.toString(), style: TextStyle(color: Colors.black, fontWeight: FontWeight.w300),),
                                       ],
                                     );
                                 }
@@ -140,7 +140,7 @@ class _ProductTransactionsState extends State<ProductTransactions> {
                           );
                         }
                     ),
-                    Text("Total de la compra: " + purchasedProducts.elementAt(index).productPurchaseSum.toString(), style: TextStyle(color: Colors.black),),
+                    Text("Total de la compra: " + purchasedProducts.elementAt(index).productPurchaseSum.toStringAsFixed(2), style: TextStyle(color: Colors.black),),
                     SizedBox(height: 15,),
                   ],
                 ),

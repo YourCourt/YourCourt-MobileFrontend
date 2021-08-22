@@ -12,6 +12,7 @@ class Book {
   double productBookingSum;
 
   Book({
+    this.id,
     this.endDate,
     this.startDate,
     this.userId,
@@ -24,7 +25,11 @@ class Book {
     endDate = json["endDate"];
     startDate = json["startDate"];
     userId = json["user"];
-    productBooking = ProductBooking.fromJson(json["productBooking"]);
+    if(json["productBooking"]==null){
+      productBooking = null;
+    } else {
+      productBooking = ProductBooking.fromJson(json["productBooking"]);
+    }
     courtId = json["court"];
     productBookingSum = json["productBookingSum"];
 

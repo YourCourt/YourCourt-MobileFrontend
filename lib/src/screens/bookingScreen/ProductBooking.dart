@@ -13,6 +13,7 @@ import 'package:http/http.dart' as http;
 import 'package:yourcourt/src/models/ProductBookingLine.dart';
 import 'package:yourcourt/src/utils/functions.dart';
 import 'package:yourcourt/src/utils/headers.dart';
+import 'package:yourcourt/src/utils/toast_messages.dart';
 
 import 'BookConfirmationScreen.dart';
 
@@ -55,7 +56,7 @@ class _ProductBookingState extends State<ProductBooking> {
   int _stockLimit = 20;
   List<ProductBookingLine> productsBooking = [];
   String _productType = "Raqueta";
-  int   _productCounter=0;
+  int _productCounter = 0;
 
   Widget body() {
     return Center(
@@ -83,8 +84,8 @@ class _ProductBookingState extends State<ProductBooking> {
                   hint: Text(
                     "Elige un tipo de producto",
                   ),
-                  items:
-                  snapshot.data.map<DropdownMenuItem<String>>((String item) {
+                  items: snapshot.data
+                      .map<DropdownMenuItem<String>>((String item) {
                     return DropdownMenuItem<String>(
                       value: item,
                       child: new Text(item),
@@ -156,25 +157,41 @@ class _ProductBookingState extends State<ProductBooking> {
                   width: 300.0,
                   image: NetworkImage(products.elementAt(index).image.imageUrl),
                 ),
-                SizedBox(height: 5,),
+                SizedBox(
+                  height: 5,
+                ),
                 Text(
                   products.elementAt(index).name,
-                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 15.0),
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 15.0),
                 ),
-                SizedBox(height: 5,),
+                SizedBox(
+                  height: 5,
+                ),
                 Text(
                   products.elementAt(index).description,
-                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.w300),
+                  style: TextStyle(
+                      color: Colors.black, fontWeight: FontWeight.w300),
                 ),
-                SizedBox(height: 5,),
-                Text("Precio de alquiler: " +
-                  products.elementAt(index).bookPrice.toString() + " €",
-                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.w300),
+                SizedBox(
+                  height: 5,
                 ),
-                SizedBox(height: 5,),
-                Text("Stock: " +
-                  products.elementAt(index).stock.toString(),
-                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.w300),
+                Text(
+                  "Precio de alquiler: " +
+                      products.elementAt(index).bookPrice.toString() +
+                      " €",
+                  style: TextStyle(
+                      color: Colors.black, fontWeight: FontWeight.w300),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  "Stock: " + products.elementAt(index).stock.toString(),
+                  style: TextStyle(
+                      color: Colors.black, fontWeight: FontWeight.w300),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -231,9 +248,20 @@ class _ProductBookingState extends State<ProductBooking> {
                                                         .elementAt(index)
                                                         .id,
                                                     quantity: _productCounter));
+                                            int quantity = _productCounter;
                                             _productCounter = 0;
                                             setState(() {
                                               Navigator.pop(context);
+                                              showMessage(
+                                                  "Se han añadido a la reserva " +
+                                                      quantity
+                                                          .toString() +
+                                                      " " +
+                                                      products
+                                                          .elementAt(index)
+                                                          .name +
+                                                      "",
+                                                  context);
                                             });
                                           },
                                           child: Text("Si")),
@@ -269,12 +297,14 @@ class _ProductBookingState extends State<ProductBooking> {
   }
 
   Future<List<Product>> getBookableProduct(String type) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     List<Product> products = [];
     var jsonResponse;
-
+    var token = sharedPreferences.getString("token");
     var response = await http.get(
         "https://dev-yourcourt-api.herokuapp.com/products/bookableProductsByType?typeName=" +
-            type);
+            type,
+    headers: {"Authorization": "Bearer $token"});
     if (response.statusCode == 200) {
       jsonResponse = transformUtf8(response.bodyBytes);
       for (var item in jsonResponse) {

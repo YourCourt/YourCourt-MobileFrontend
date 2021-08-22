@@ -40,11 +40,11 @@ class _SignUpPageState extends State<SignUpPage> {
             child: Column(
               children: <Widget>[
                 SizedBox(
-                  height: 15.0,
+                  height: 10.0,
                 ),
                 headerSection(),
                 SizedBox(
-                  height: 20.0,
+                  height: 10.0,
                 ),
                 textSection(context),
                 buttonSection(),
@@ -85,10 +85,12 @@ class _SignUpPageState extends State<SignUpPage> {
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (BuildContext context) => MainPage()),
             (Route<dynamic> route) => false);
+        showMessage("Usuario registrado con éxito", context);
       }
     } else {
       print(response.statusCode);
       print("Se ha producido un error: " + response.body);
+      showMessage("Ha ocurrido un error: " + response.body.toString(), context);
     }
     return response;
   }
@@ -148,12 +150,18 @@ class _SignUpPageState extends State<SignUpPage> {
                 hintStyle: TextStyle(color: Colors.white70),
               ),
             ),
-            SizedBox(height: 10.0),
+            SizedBox(height: 5.0),
             TextFormField(
               controller: passwordController,
               validator: (value) {
+                String passwordPatter =
+                    r"(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])?[A-Za-z\d$@$!%*?&].{8,}";
+                RegExp regExp = new RegExp(passwordPatter);
                 if (value.length == 0) {
                   return 'Por favor, introduzca una contraseña';
+                } else if (!regExp.hasMatch(value)) {
+                  return 'La contraseña debe contener al menos 8 caracteres entre letras, '
+                      ' al menos una mayúscula, y números';
                 }
                 return null;
               },
@@ -168,7 +176,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 hintStyle: TextStyle(color: Colors.white70),
               ),
             ),
-            SizedBox(height: 10.0),
+            SizedBox(height: 5.0),
             TextFormField(
               controller: emailController,
               validator: (value) {
@@ -192,7 +200,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 hintStyle: TextStyle(color: Colors.white70),
               ),
             ),
-            SizedBox(height: 10.0),
+            SizedBox(height: 5.0),
             TextFormField(
               controller: phoneController,
               keyboardType: TextInputType.phone,
@@ -216,16 +224,16 @@ class _SignUpPageState extends State<SignUpPage> {
                 hintStyle: TextStyle(color: Colors.white70),
               ),
             ),
-            SizedBox(height: 10.0),
+            SizedBox(height: 5.0),
             TextFormField(
               controller: membershipController,
               validator: (value) {
-                String memberShipPatter = r"\\b\\d{5}\\b";
+                String memberShipPatter = r"\b\d{5}\b";
                 RegExp regExp = new RegExp(memberShipPatter);
                 if (value.length == 0) {
                   return 'Por favor, introduzca un número de socio';
                 } else if (!regExp.hasMatch(value)) {
-                  return 'Por favor, introduzca un número de socio válido';
+                  return 'El número de socio es de 5 dígitos';
                 }
                 return null;
               },
@@ -239,7 +247,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 hintStyle: TextStyle(color: Colors.white70),
               ),
             ),
-            SizedBox(height: 10.0),
+            SizedBox(height: 5.0),
             Text(
               'Fecha de nacimiento:',
               textAlign: TextAlign.left,
@@ -248,12 +256,12 @@ class _SignUpPageState extends State<SignUpPage> {
             SizedBox(
               height: 5.0,
             ),
-            Text(dateIsCorrect(_dateTime)),
-            SizedBox(height: 10.0),
+            dateIsCorrect(_dateTime),
+            SizedBox(height: 5.0),
             TextButton(
               child: Icon(
                 Icons.calendar_today,
-                color: Colors.black87,
+                color: Colors.white70,
               ),
               onPressed: () {
                 showDatePicker(
@@ -277,13 +285,13 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  String dateIsCorrect(DateTime date) {
+  Widget dateIsCorrect(DateTime date) {
     if (date == null) {
-      return "No hay ninguna fecha seleccionada";
-    } else if (date.day == DateTime.now().day) {
-      return "La fecha tiene que ser pasada";
+      return Text("No hay ninguna fecha seleccionada");
+    } else if (date.day == DateTime.now().day && date.year == DateTime.now().year) {
+      return Text("La fecha tiene que ser pasada", style: TextStyle(color: Colors.red),);
     } else {
-      return date.toString();
+      return Text(date.toString());
     }
   }
 

@@ -5,6 +5,7 @@ import 'package:yourcourt/src/models/Product.dart';
 import 'package:http/http.dart' as http;
 import 'package:yourcourt/src/models/dto/ProductPurchaseDto.dart';
 import 'package:yourcourt/src/models/dto/ProductPurchaseLineDto.dart';
+import 'package:yourcourt/src/screens/ProductTransactionsScreen.dart';
 import 'package:yourcourt/src/utils/functions.dart';
 import 'package:yourcourt/src/utils/headers.dart';
 import 'package:yourcourt/src/utils/menu.dart';
@@ -71,7 +72,7 @@ class _ShoppingPurchaseProductsState extends State<ShoppingPurchaseProducts> {
                                       confirmPurchase(productPurchaseLines);
                                       setState(() {
                                         productPurchaseLines=[];
-                                        Navigator.pop(context);
+                                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ProductTransactions()));
                                       });
                                     },
                                     child: Text("Si")
@@ -156,7 +157,7 @@ class _ShoppingPurchaseProductsState extends State<ShoppingPurchaseProducts> {
                     ),
                     SizedBox(height: 5,),
                     Text("Impuestos: " +
-                        snapshot.data.tax.toString() + " €",
+                        snapshot.data.tax.toString() + " %",
                       style: TextStyle(color: Colors.black, fontWeight: FontWeight.w300),
                     ),
                     SizedBox(height: 5,),

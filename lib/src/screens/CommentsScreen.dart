@@ -87,12 +87,18 @@ class _CommentsState extends State<Comments> {
                                           ),
                                           actions: [
                                             ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                  primary: Color(0xFFBB856E),
+                                                ),
                                                 onPressed: () async {
                                                   addNewComment(commentController.text, widget.newsId);
                                                 },
                                                 child: Text("Comentar")
                                             ),
                                             ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                  primary: Color(0xFFBB856E),
+                                                ),
                                                 onPressed:  () {
                                                   Navigator.pop(context);
                                                 },

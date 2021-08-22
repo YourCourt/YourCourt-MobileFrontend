@@ -49,7 +49,7 @@ class _CoursesState extends State<Courses> {
         itemCount: courses.length,
         itemBuilder: (BuildContext context, int index) {
           if (DateTime.now()
-              .isAfter(DateTime.parse(courses.elementAt(index).startDate))) {
+              .isBefore(DateTime.parse(courses.elementAt(index).startDate))) {
             return Column(
               children: [
                 SizedBox(

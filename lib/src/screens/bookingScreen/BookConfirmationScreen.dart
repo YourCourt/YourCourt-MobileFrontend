@@ -17,6 +17,7 @@ import 'package:yourcourt/src/utils/menu.dart';
 import 'package:yourcourt/src/utils/principal_structure.dart';
 
 import '../login/LoginPage.dart';
+import 'MyBooksScreen.dart';
 
 
 class BookConfirmation extends StatefulWidget {
@@ -95,7 +96,7 @@ class _BookConfirmationState extends State<BookConfirmation> {
                 //Si se produce algún error en la reserva, mostrarlo.
                 Response r = await confirmBook();
                 if(r.statusCode == 201){
-                  Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => MainPage()));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => MyBooks()));
                 } else{
                   print("Se ha producido un error: " + r.body);
                 }

@@ -152,7 +152,6 @@ class _MyProfileState extends State<MyProfile> {
           );
         } else {
           return CircularProgressIndicator(
-
           );
         }
       }
@@ -170,16 +169,22 @@ class _MyProfileState extends State<MyProfile> {
         builder: (context, snapshot){
           if(snapshot.connectionState==ConnectionState.done){
             return ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: Color(0xFFDBA58F),
+              ),
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => PerfilUpdate(user: snapshot.data,)));
               },
-              child: Text("Actualizar perfil", style: TextStyle(color: Colors.black)),
+              child: Text("Actualizar perfil", style: TextStyle(color: Colors.white)),
             );
           }
           return ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              primary: Color(0xFFDBA58F),
+            ),
             onPressed: () {
             },
-            child: Text("Actualizar perfil", style: TextStyle(color: Colors.black)),
+            child: Text("Actualizar perfil", style: TextStyle(color: Colors.white70)),
           );
         }
       )

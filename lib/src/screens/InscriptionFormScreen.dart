@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:yourcourt/src/screens/MyInscriptionsScreen.dart';
 import 'package:yourcourt/src/utils/menu.dart';
 import 'package:yourcourt/src/utils/principal_structure.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -265,7 +266,7 @@ class _InscriptionFormState extends State<InscriptionForm> {
       showMessage("Inscripción registrada con éxito", context);
       setState(() {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => MainPage()));
+            context, MaterialPageRoute(builder: (context) => MyInscriptions()));
       });
 
     } else {

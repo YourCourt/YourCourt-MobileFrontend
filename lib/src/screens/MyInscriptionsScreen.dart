@@ -44,7 +44,7 @@ class _MyInscriptionsState extends State<MyInscriptions> {
     return FutureBuilder<List<Inscription>>(
         future: getInscriptions(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasData) {
             return Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -275,7 +275,7 @@ class _MyInscriptionsState extends State<MyInscriptions> {
           });
     } else {
       return Center(
-        child: Container(child: Text("No hay ninguna inscripción realizada")),
+        child: Container(child: Text("  No hay ninguna inscripción realizada")),
       );
     }
   }
@@ -335,7 +335,7 @@ class _MyInscriptionsState extends State<MyInscriptions> {
                           Navigator.pop(context);
                         });
                       } else {
-                        showMessage("¡Ha ocurrido algo inesperado!", context);
+                        showMessage("¡Ha ocurrido algo inesperado!" + response.body, context);
                         print(response.statusCode);
                         print("Se ha producido un error: " + response.body);
                       }

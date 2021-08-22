@@ -162,9 +162,10 @@ class SelectHour extends StatelessWidget {
   }
 
   Future<List<BookDate>> getAvailableHours(int courtId, String date) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     List<BookDate> availableHours = possibilityHours;
 
-    print(DateTime.now());
+    var token = sharedPreferences.getString("token");
     if (DateTime.now().toString().contains(date)) {
       availableHours.removeWhere((element) =>
           getDoubleNumber(element.startHour) < DateTime.now().hour.toDouble());
@@ -178,7 +179,9 @@ class SelectHour extends StatelessWidget {
             date,
         headers: {
           "Accept": "application/json",
-          "Content-type": "application/json"
+          "Content-type": "application/json",
+          "Authorization": "Bearer $token"
+
         });
 
     if (response.statusCode == 200) {
