@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:yourcourt/src/screens/loginScreens/LoginPage.dart';
 import 'package:yourcourt/src/utils/menu.dart';
 import 'package:yourcourt/src/utils/principal_structure.dart';
 import 'package:yourcourt/src/models/Inscription.dart';
@@ -9,7 +10,6 @@ import 'package:yourcourt/src/utils/functions.dart';
 import 'package:yourcourt/src/utils/headers.dart';
 import 'package:yourcourt/src/utils/toast_messages.dart';
 
-import 'login/LoginPage.dart';
 
 class MyInscriptions extends StatefulWidget {
   @override

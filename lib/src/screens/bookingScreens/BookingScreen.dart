@@ -5,13 +5,13 @@ import 'package:intl/intl.dart';
 import 'package:yourcourt/src/models/BookingDate.dart';
 import 'package:yourcourt/src/models/Court.dart';
 import 'package:http/http.dart' as http;
+import 'package:yourcourt/src/screens/loginScreens/LoginPage.dart';
 import 'package:yourcourt/src/utils/headers.dart';
 import 'package:yourcourt/src/utils/functions.dart';
 import 'package:yourcourt/src/utils/menu.dart';
 import 'package:yourcourt/src/utils/principal_structure.dart';
 
 import 'BookConfirmationScreen.dart';
-import '../login/LoginPage.dart';
 
 class BookingPage extends StatefulWidget {
   final Court court;

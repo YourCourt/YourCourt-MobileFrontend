@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:yourcourt/src/models/User.dart';
-import 'package:yourcourt/src/screens/PerfilScreen.dart';
+import 'package:yourcourt/src/screens/loginScreens/LoginPage.dart';
+import 'package:yourcourt/src/screens/perfilScreens/PerfilScreen.dart';
 import 'package:yourcourt/src/utils/headers.dart';
 import 'package:yourcourt/src/utils/menu.dart';
 import 'package:yourcourt/src/utils/toast_messages.dart';
-import 'login/LoginPage.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yourcourt/src/utils/principal_structure.dart';
@@ -163,6 +163,9 @@ class _PerfilUpdateState extends State<PerfilUpdate> {
       padding: EdgeInsets.symmetric(horizontal: 15.0),
       margin: EdgeInsets.only(top: 15.0),
       child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          primary: Color(0xFFDBA58F),
+        ),
         onPressed: (_emailController.text == "" || _phoneController.text == "")
             ? null
             : () {
@@ -179,7 +182,7 @@ class _PerfilUpdateState extends State<PerfilUpdate> {
           }
 
               },
-        child: Text("Confirmar Cambios", style: TextStyle(color: Colors.black)),
+        child: Text("Confirmar Cambios", style: TextStyle(color: Colors.white)),
       ),
     );
   }

@@ -6,12 +6,12 @@ import 'package:yourcourt/src/models/Comment.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yourcourt/src/models/News.dart';
 import 'package:http/http.dart' as http;
+import 'package:yourcourt/src/screens/loginScreens/LoginPage.dart';
 import 'package:yourcourt/src/utils/functions.dart';
 import 'package:yourcourt/src/utils/headers.dart';
 import 'package:yourcourt/src/utils/menu.dart';
 import 'package:yourcourt/src/utils/principal_structure.dart';
 
-import 'login/LoginPage.dart';
 
 class Comments extends StatefulWidget {
 

@@ -1,9 +1,9 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:yourcourt/main.dart';
-import 'package:yourcourt/src/screens/ShoppingPurchaseProductScreen.dart';
-import 'package:yourcourt/src/screens/login/LoginPage.dart';
-import 'package:yourcourt/src/screens/PerfilScreen.dart';
+import 'package:yourcourt/src/screens/loginScreens/LoginPage.dart';
+import 'package:yourcourt/src/screens/transactionsScreens/ShoppingPurchaseProductScreen.dart';
+import 'package:yourcourt/src/screens/perfilScreens/PerfilScreen.dart';
 
 import '../vars.dart';
 

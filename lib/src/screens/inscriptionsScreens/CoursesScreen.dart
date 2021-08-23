@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:yourcourt/src/screens/loginScreens/LoginPage.dart';
 import 'package:yourcourt/src/utils/menu.dart';
 import 'package:yourcourt/src/utils/principal_structure.dart';
 import 'package:yourcourt/src/models/Course.dart';
@@ -10,6 +11,7 @@ import 'package:yourcourt/src/utils/headers.dart';
 
 import 'InscriptionFormScreen.dart';
 
+
 class Courses extends StatefulWidget {
   @override
   _CoursesState createState() => _CoursesState();
@@ -17,6 +19,21 @@ class Courses extends StatefulWidget {
 
 class _CoursesState extends State<Courses> {
   SharedPreferences sharedPreferences;
+
+  @override
+  void initState() {
+    super.initState();
+    checkLoginStatus();
+  }
+
+  checkLoginStatus() async {
+    sharedPreferences = await SharedPreferences.getInstance();
+    if (sharedPreferences.getString("token") == null) {
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (BuildContext context) => LoginPage()),
+              (Route<dynamic> route) => false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

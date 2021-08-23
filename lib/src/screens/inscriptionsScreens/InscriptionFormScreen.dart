@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:yourcourt/src/screens/MyInscriptionsScreen.dart';
+import 'package:yourcourt/src/screens/loginScreens/LoginPage.dart';
 import 'package:yourcourt/src/utils/menu.dart';
 import 'package:yourcourt/src/utils/principal_structure.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,7 +11,8 @@ import 'package:yourcourt/src/models/dto/InscriptionDto.dart';
 import 'package:yourcourt/src/utils/headers.dart';
 import 'package:yourcourt/src/utils/toast_messages.dart';
 
-import '../../main.dart';
+import 'MyInscriptionsScreen.dart';
+
 
 class InscriptionForm extends StatefulWidget {
   final int courseId;
@@ -24,6 +25,21 @@ class InscriptionForm extends StatefulWidget {
 
 class _InscriptionFormState extends State<InscriptionForm> {
   SharedPreferences sharedPreferences;
+
+  @override
+  void initState() {
+    super.initState();
+    checkLoginStatus();
+  }
+
+  checkLoginStatus() async {
+    sharedPreferences = await SharedPreferences.getInstance();
+    if (sharedPreferences.getString("token") == null) {
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (BuildContext context) => LoginPage()),
+              (Route<dynamic> route) => false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -270,8 +286,10 @@ class _InscriptionFormState extends State<InscriptionForm> {
       });
 
     } else {
+      showMessage("Se han encontrado los siguientes errores: " + response.body, context);
       print(response.statusCode);
       print("Se ha producido un error " + response.body);
+      Navigator.pop(context);
     }
   }
 }

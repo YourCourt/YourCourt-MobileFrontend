@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:yourcourt/src/screens/CourtsScreen.dart';
-import 'package:yourcourt/src/screens/ProductsScreen.dart';
+import 'package:yourcourt/src/screens/bookingScreens/CourtsScreen.dart';
+import 'package:yourcourt/src/screens/loginScreens/LoginPage.dart';
+import 'package:yourcourt/src/screens/transactionsScreens/ProductsScreen.dart';
 import 'package:yourcourt/src/utils/headers.dart';
 import 'package:yourcourt/src/utils/menu.dart';
-import 'package:yourcourt/src/screens/login/LoginPage.dart';
 import 'package:yourcourt/src/utils/principal_structure.dart';
 
 void main() => runApp(MyApp());

@@ -1,6 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:yourcourt/src/screens/loginScreens/LoginPage.dart';
 import 'package:yourcourt/src/utils/menu.dart';
 import 'package:yourcourt/src/utils/principal_structure.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,8 +11,7 @@ import 'package:yourcourt/src/models/dto/ProductPurchaseLineDto.dart';
 import 'package:yourcourt/src/utils/functions.dart';
 import 'package:yourcourt/src/utils/headers.dart';
 
-import '../vars.dart';
-import 'login/LoginPage.dart';
+import '../../vars.dart';
 
 class Products extends StatefulWidget {
 

@@ -5,13 +5,13 @@ import 'package:yourcourt/src/models/Product.dart';
 import 'package:http/http.dart' as http;
 import 'package:yourcourt/src/models/dto/ProductPurchaseDto.dart';
 import 'package:yourcourt/src/models/dto/ProductPurchaseLineDto.dart';
-import 'package:yourcourt/src/screens/ProductTransactionsScreen.dart';
+import 'package:yourcourt/src/screens/loginScreens/LoginPage.dart';
+import 'package:yourcourt/src/screens/transactionsScreens/ProductTransactionsScreen.dart';
 import 'package:yourcourt/src/utils/functions.dart';
 import 'package:yourcourt/src/utils/headers.dart';
 import 'package:yourcourt/src/utils/menu.dart';
 import 'package:yourcourt/src/utils/principal_structure.dart';
 import 'package:yourcourt/src/vars.dart';
-import 'login/LoginPage.dart';
 import 'dart:convert';
 
 class ShoppingPurchaseProducts extends StatefulWidget {

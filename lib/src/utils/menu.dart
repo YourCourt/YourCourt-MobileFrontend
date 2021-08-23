@@ -3,15 +3,15 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:yourcourt/src/screens/CoursesScreen.dart';
-import 'package:yourcourt/src/screens/CourtsScreen.dart';
+import 'package:yourcourt/src/screens/bookingScreens/MyBooksScreen.dart';
+import 'package:yourcourt/src/screens/inscriptionsScreens/CoursesScreen.dart';
+import 'package:yourcourt/src/screens/bookingScreens/CourtsScreen.dart';
 import 'package:http/http.dart' as http;
 import 'package:yourcourt/src/screens/FacilitiesScreen.dart';
-import 'package:yourcourt/src/screens/MyInscriptionsScreen.dart';
-import 'package:yourcourt/src/screens/NewsScreen.dart';
-import 'package:yourcourt/src/screens/ProductTransactionsScreen.dart';
-import 'package:yourcourt/src/screens/ProductsScreen.dart';
-import 'package:yourcourt/src/screens/bookingScreen/MyBooksScreen.dart';
+import 'package:yourcourt/src/screens/inscriptionsScreens/MyInscriptionsScreen.dart';
+import 'package:yourcourt/src/screens/newsScreens/NewsScreen.dart';
+import 'package:yourcourt/src/screens/transactionsScreens/ProductTransactionsScreen.dart';
+import 'package:yourcourt/src/screens/transactionsScreens/ProductsScreen.dart';
 import 'package:yourcourt/src/models/User.dart';
 
 
