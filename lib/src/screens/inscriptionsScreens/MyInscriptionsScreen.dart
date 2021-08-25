@@ -259,7 +259,7 @@ class _MyInscriptionsState extends State<MyInscriptions> {
                   style: ElevatedButton.styleFrom(
                     primary: Color(0xFFDBA58F),
                   ),
-                  onPressed: /*DateTime.now().isAfter(DateTime.parse(inscriptions.elementAt(index).course.startDate)) ? null :  */ () {
+                  onPressed: DateTime.now().isAfter(DateTime.parse(inscriptions.elementAt(index).course.startDate)) ? null :   () {
                     deleteInscription(inscriptions.elementAt(index));
                   },
                   child: Text(
