@@ -172,13 +172,7 @@ class _PerfilUpdateState extends State<PerfilUpdate> {
 
           if (_formKey.currentState.validate()) {
             updateUser(_emailController.text, _phoneController.text);
-            setState(() {
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                      builder: (BuildContext context) => MyProfile()),
-                      (route) => false);
-            });
+
           }
 
               },
@@ -250,8 +244,15 @@ class _PerfilUpdateState extends State<PerfilUpdate> {
         });
 
     if (response.statusCode == 200) {
-      print("Perfil de usuario actualizado");
       showMessage('¡Perfil actualizado!', context);
+      setState(() {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext context) => MyProfile()),
+                (route) => false);
+      });
+      print("Perfil de usuario actualizado");
     } else {
       print(
           "Se ha producido un error al actualizar el usuario" + response.body);
