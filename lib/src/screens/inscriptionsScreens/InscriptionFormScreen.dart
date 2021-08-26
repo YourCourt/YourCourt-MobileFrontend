@@ -220,6 +220,7 @@ class _InscriptionFormState extends State<InscriptionForm> {
                               onPressed: () async {
                                 if(!_formKey.currentState.validate()){
                                   showMessage("Algunos campos son incorrectos", context);
+                                  Navigator.pop(context);
                                 } else {
                                   signOn(
                                       nameController.text,
