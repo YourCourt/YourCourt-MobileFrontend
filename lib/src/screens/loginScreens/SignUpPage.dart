@@ -83,7 +83,7 @@ class _SignUpPageState extends State<SignUpPage> {
         sharedPreferences.setString("username", username);
 
         Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (BuildContext context) => MainPage()),
+            MaterialPageRoute(builder: (BuildContext context) => LoginPage()),
             (Route<dynamic> route) => false);
         showMessage("Usuario registrado con éxito", context);
       }
