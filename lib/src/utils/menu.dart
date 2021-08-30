@@ -3,16 +3,15 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:yourcourt/main.dart';
-import 'package:yourcourt/src/screens/CoursesScreen.dart';
-import 'package:yourcourt/src/screens/CourtsScreen.dart';
+import 'package:yourcourt/src/screens/bookingScreens/MyBooksScreen.dart';
+import 'package:yourcourt/src/screens/inscriptionsScreens/CoursesScreen.dart';
+import 'package:yourcourt/src/screens/bookingScreens/CourtsScreen.dart';
 import 'package:http/http.dart' as http;
 import 'package:yourcourt/src/screens/FacilitiesScreen.dart';
-import 'package:yourcourt/src/screens/MyInscriptionsScreen.dart';
-import 'package:yourcourt/src/screens/NewsScreen.dart';
-import 'package:yourcourt/src/screens/ProductTransactionsScreen.dart';
-import 'package:yourcourt/src/screens/ProductsScreen.dart';
-import 'package:yourcourt/src/screens/bookingScreen/MyBooksScreen.dart';
+import 'package:yourcourt/src/screens/inscriptionsScreens/MyInscriptionsScreen.dart';
+import 'package:yourcourt/src/screens/newsScreens/NewsScreen.dart';
+import 'package:yourcourt/src/screens/transactionsScreens/ProductTransactionsScreen.dart';
+import 'package:yourcourt/src/screens/transactionsScreens/ProductsScreen.dart';
 import 'package:yourcourt/src/models/User.dart';
 
 
@@ -99,13 +98,9 @@ class _ListaDatosDeUsuario extends StatelessWidget {
           ),
         ),
         ElevatedButton(
-          child: Text("Inicio", style: TextStyle(color: Colors.white),),
-          onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => MainPage()));
-          },
-        ),
-        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            primary: Color(0xFFDBA58F),
+          ),
             child: Text(
               "Pistas", style: TextStyle(color: Colors.white),),
             onPressed: () {
@@ -114,6 +109,9 @@ class _ListaDatosDeUsuario extends StatelessWidget {
             }
         ),
         ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              primary: Color(0xFFBB856E),
+            ),
             child: Text(
               "Instalaciones", style: TextStyle(color: Colors.white),),
             onPressed: () {
@@ -122,6 +120,9 @@ class _ListaDatosDeUsuario extends StatelessWidget {
             }
         ),
         ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              primary: Color(0xFFDBA58F),
+            ),
             child: Text(
               "Noticias", style: TextStyle(color: Colors.white),),
             onPressed: () {
@@ -129,6 +130,9 @@ class _ListaDatosDeUsuario extends StatelessWidget {
             }
         ),
         ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              primary: Color(0xFFBB856E),
+            ),
             child: Text(
               "Productos", style: TextStyle(color: Colors.white),),
             onPressed: () {
@@ -137,6 +141,9 @@ class _ListaDatosDeUsuario extends StatelessWidget {
             }
         ),
         ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              primary: Color(0xFFDBA58F),
+            ),
             child: Text(
               "Mis reservas", style: TextStyle(color: Colors.white),),
             onPressed: () {
@@ -145,6 +152,9 @@ class _ListaDatosDeUsuario extends StatelessWidget {
             }
         ),
         ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              primary: Color(0xFFBB856E),
+            ),
             child: Text(
               "Mis transacciones", style: TextStyle(color: Colors.white),),
             onPressed: () {
@@ -153,6 +163,9 @@ class _ListaDatosDeUsuario extends StatelessWidget {
             }
         ),
         ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              primary: Color(0xFFDBA58F),
+            ),
             child: Text(
               "Cursos", style: TextStyle(color: Colors.white),),
             onPressed: () {
@@ -161,6 +174,9 @@ class _ListaDatosDeUsuario extends StatelessWidget {
             }
         ),
         ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              primary: Color(0xFFBB856E),
+            ),
             child: Text(
               "Mis inscripciones", style: TextStyle(color: Colors.white),),
             onPressed: () {

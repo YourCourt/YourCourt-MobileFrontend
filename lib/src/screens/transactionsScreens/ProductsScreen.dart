@@ -1,6 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:yourcourt/src/screens/loginScreens/LoginPage.dart';
 import 'package:yourcourt/src/utils/menu.dart';
 import 'package:yourcourt/src/utils/principal_structure.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,8 +11,7 @@ import 'package:yourcourt/src/models/dto/ProductPurchaseLineDto.dart';
 import 'package:yourcourt/src/utils/functions.dart';
 import 'package:yourcourt/src/utils/headers.dart';
 
-import '../vars.dart';
-import 'login/LoginPage.dart';
+import '../../vars.dart';
 
 class Products extends StatefulWidget {
 
@@ -54,6 +54,14 @@ class _ProductsState extends State<Products> {
         if (snapshot.hasData) {
           return Column(
               children: [
+                SizedBox(
+                  height: 5.0,
+                ),
+                Text(
+                  "Seleccione un tipo de producto",
+                  style: TextStyle(color: Colors.black),
+                  textAlign: TextAlign.left,
+                ),
                 Expanded(
                   child: DropdownButtonFormField(
                     onChanged: (dynamic value) {
@@ -80,9 +88,8 @@ class _ProductsState extends State<Products> {
               ]
           );
         }
-        return Container(
-          child: Text("No se encuentra disponible esta operación",
-            style: TextStyle(color: Colors.black),),
+        return Center(
+          child: CircularProgressIndicator(),
         );
       },
     );
@@ -94,86 +101,89 @@ class _ProductsState extends State<Products> {
           future: getProductsByType(productType),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return GridView.count(
-                  crossAxisCount: 2,
-                  children: [
-                    showProductsByType(snapshot.data),
-                  ]
-              );
+              return showProductsByType(snapshot.data);
             } else {
-              return Container(child: Text("No hay productos alquilables"),);
+              return Container();
             }
           });
+    } else {
+      return Container(child: Text("No hay productos alquilables"));
     }
-
-    return Container();
   }
 
 
   Widget showProductsByType(List<Product> products) {
-    Widget showProduct = ListView.builder(
-        scrollDirection: Axis.vertical,
-        shrinkWrap: true,
-        itemCount: products.length,
-        itemBuilder: (BuildContext context, int index) {
-          return Column(
-            children: [
-              Image(
-                fit: BoxFit.fitHeight,
-                image: NetworkImage(products
-                    .elementAt(index)
-                    .image
-                    .imageUrl),),
-              Text(products
-                  .elementAt(index)
-                  .name, style: TextStyle(color: Colors.black),),
-              Text(products
-                  .elementAt(index)
-                  .description, style: TextStyle(color: Colors.black),),
-              Text(products
-                  .elementAt(index)
-                  .price
-                  .toString(), style: TextStyle(color: Colors.black),),
-              Text(products
-                  .elementAt(index)
-                  .productType, style: TextStyle(color: Colors.black),),
-              Text(products
-                  .elementAt(index)
-                  .stock
-                  .toString(), style: TextStyle(color: Colors.black),),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  _productCounter != 0 ? new
-                  IconButton(
-                    icon: new Icon(Icons.remove),
-                    onPressed: () {
-                      setState(() {
-                        _productCounter--;
-                      });
-                    },
-                  )
-                      : new Container(),
-                  new Text(_productCounter.toString()),
-                  products
-                      .elementAt(index)
-                      .stock - _productCounter > _stockLimit ?
-                  new
-                  IconButton(
-                      icon: new Icon(Icons.add),
+    if(products.length!=0){
+      return ListView.builder(
+          scrollDirection: Axis.vertical,
+          shrinkWrap: true,
+          itemCount: products.length,
+          itemBuilder: (BuildContext context, int index) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image(
+                  height: 300.0,
+                  width: 300.0,
+                  image: NetworkImage(products.elementAt(index).image.imageUrl),
+                ),
+                SizedBox(height: 5,),
+                Text(
+                  products.elementAt(index).name,
+                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 15.0),
+                ),
+                SizedBox(height: 5,),
+                Text(
+                  products.elementAt(index).description,
+                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.w300),
+                ),
+                SizedBox(height: 5,),
+                Text("Precio: " +
+                    products.elementAt(index).price.toString() + " €",
+                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.w300),
+
+                ),
+                SizedBox(height: 5,),
+                Text("Stock: " +
+                    products.elementAt(index).stock.toString(),
+                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.w300),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _productCounter != 0 ? new
+                    IconButton(
+                      icon: new Icon(Icons.remove),
                       onPressed: () {
+                        setState(() {
+                          _productCounter--;
+                        });
+                      },
+                    )
+                        : new Container(),
+                    new Text(_productCounter.toString()),
+                    products
+                        .elementAt(index)
+                        .stock - _productCounter > _stockLimit ?
+                    new
+                    IconButton(
+                        icon: new Icon(Icons.add),
+                        onPressed: () {
                           setState(() {
                             _productCounter++;
                           });
                         }
-                  ) : new Container(),
-                ],
-              ),
-              ElevatedButton(
-                  onPressed: _productCounter == 0 ? null :() {
+                    ) : new Container(),
+                  ],
+                ),
+                ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: Color(0xFFDBA58F),
+                    ),
+                    onPressed: _productCounter == 0 ? null :() {
                       showDialog(
                           context: context,
-                           builder: (context) {
+                          builder: (context) {
                             return AlertDialog(
                               content: Text("¿Desea añadir " +
                                   _productCounter.toString() + " " + products
@@ -181,18 +191,24 @@ class _ProductsState extends State<Products> {
                                   .name + " al carrito?"),
                               actions: [
                                 ElevatedButton(
-                                            onPressed: () {
-                                              productPurchaseLines.add(ProductPurchaseLineDto(productId:products
-                                                  .elementAt(index).id, quantity: _productCounter, discount: 0 ));
-                                              setState(() {
+                                    style: ElevatedButton.styleFrom(
+                                      primary: Color(0xFFBB856E),
+                                    ),
+                                    onPressed: () {
+                                      productPurchaseLines.add(ProductPurchaseLineDto(productId:products
+                                          .elementAt(index).id, quantity: _productCounter, discount: 0 ));
+                                      setState(() {
 
-                                                _productCounter = 0;
-                                                Navigator.pop(context);
-                                              });
-                                            },
-                                            child: Text("Si")
-                                        ),
+                                        _productCounter = 0;
+                                        Navigator.pop(context);
+                                      });
+                                    },
+                                    child: Text("Si")
+                                ),
                                 ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      primary: Color(0xFFBB856E),
+                                    ),
                                     onPressed: () {
                                       Navigator.pop(context);
                                     },
@@ -202,15 +218,18 @@ class _ProductsState extends State<Products> {
                             );
                           }
                       );
-                      },
-                  child: Text("Añadir", style: TextStyle(color: Colors.black),)
-              ),
-            ],
-          );
-        }
-    );
-
-    return showProduct;
+                    },
+                    child: Text("Añadir", style: TextStyle(color: Colors.black),)
+                ),
+              ],
+            );
+          }
+      );
+    } else {
+      return Container(
+          child: Text("No existen productos de este tipo")
+      );
+    }
   }
 
   Future<List<String>> getProductTypes() async {

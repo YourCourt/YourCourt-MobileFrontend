@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:yourcourt/src/screens/loginScreens/LoginPage.dart';
 import 'package:yourcourt/src/utils/principal_structure.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -8,7 +9,6 @@ import 'package:yourcourt/src/utils/functions.dart';
 import 'package:yourcourt/src/utils/headers.dart';
 import 'package:yourcourt/src/utils/menu.dart';
 import 'CommentsScreen.dart';
-import 'login/LoginPage.dart';
 
 class NewsPage extends StatefulWidget {
 
@@ -58,10 +58,15 @@ class _NewsPageState extends State<NewsPage> {
           itemCount: news.length,
           itemBuilder: (context, int index){
             return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                SizedBox(height: 10.0,),
+                Text(news.elementAt(index).name, style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600, fontSize: 25.0), textAlign: TextAlign.center,),
+                SizedBox(height: 10.0,),
                 Image(
                   image: NetworkImage(news.elementAt(index).image.imageUrl),
                 ),
+                SizedBox(height: 5.0,),
                 GestureDetector(
                   child: Stack(
                     alignment: Alignment.bottomLeft,
@@ -95,11 +100,14 @@ class _NewsPageState extends State<NewsPage> {
                       );
                   },
                 ),
-                Text(news.elementAt(index).name, style: TextStyle(color: Colors.black),),
-                Text("Fecha de publicación: " + news.elementAt(index).creationDate, style: TextStyle(color: Colors.black),),
-                Text(news.elementAt(index).description, style: TextStyle(color: Colors.black),),
-
-
+                SizedBox(
+                  height: 15.0,
+                ),
+                Text("Fecha de publicación: " + news.elementAt(index).creationDate, style: TextStyle(color: Colors.black, fontWeight: FontWeight.w300),),
+                SizedBox(
+                  height: 20.0,
+                ),
+                Text(news.elementAt(index).description,textAlign: TextAlign.justify, style: TextStyle(color: Colors.black), ),
 
               ],
             );

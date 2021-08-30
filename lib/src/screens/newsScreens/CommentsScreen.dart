@@ -6,12 +6,12 @@ import 'package:yourcourt/src/models/Comment.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yourcourt/src/models/News.dart';
 import 'package:http/http.dart' as http;
+import 'package:yourcourt/src/screens/loginScreens/LoginPage.dart';
 import 'package:yourcourt/src/utils/functions.dart';
 import 'package:yourcourt/src/utils/headers.dart';
 import 'package:yourcourt/src/utils/menu.dart';
 import 'package:yourcourt/src/utils/principal_structure.dart';
 
-import 'login/LoginPage.dart';
 
 class Comments extends StatefulWidget {
 
@@ -57,7 +57,13 @@ class _CommentsState extends State<Comments> {
                       if(snapshot.connectionState==ConnectionState.done){
                         return Column(
                           children: [
+                            SizedBox(
+                              height: 10.0,
+                            ),
                             ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  primary: Color(0xFFDBA58F),
+                                ),
                                 onPressed: snapshot.data.any((element) => element.user.id==sharedPreferences.getInt("id")) ? null : () {
                                   showDialog(
                                       context: context,
@@ -81,12 +87,18 @@ class _CommentsState extends State<Comments> {
                                           ),
                                           actions: [
                                             ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                  primary: Color(0xFFBB856E),
+                                                ),
                                                 onPressed: () async {
                                                   addNewComment(commentController.text, widget.newsId);
                                                 },
                                                 child: Text("Comentar")
                                             ),
                                             ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                  primary: Color(0xFFBB856E),
+                                                ),
                                                 onPressed:  () {
                                                   Navigator.pop(context);
                                                 },
@@ -99,6 +111,9 @@ class _CommentsState extends State<Comments> {
 
                                 },
                                 child: Text("Comentar")
+                            ),
+                            SizedBox(
+                              height: 20.0,
                             ),
                             Expanded(
                               child: listComments(snapshot.data),
@@ -126,11 +141,19 @@ class _CommentsState extends State<Comments> {
               children: [
                 Row(
                   children: [
+                    Text("Publicado por: " , style: TextStyle(color: Colors.black, fontWeight: FontWeight.w300),),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Text(comments.elementAt(index).user.username, style: TextStyle(color: Colors.black),),
                     SizedBox(
                       width: 5,
                     ),
-                    Text(comments.elementAt(index).creationDate, style: TextStyle(color: Colors.black),),
+                    Text(" en ", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w300),),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text(comments.elementAt(index).creationDate + ":", style: TextStyle(color: Colors.black),),
                   ],
                 ),
                 SizedBox(
@@ -184,6 +207,9 @@ class _CommentsState extends State<Comments> {
 
     if (comment.user.id == sharedPreferences.getInt("id")) {
       return ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          primary: Color(0xFFBB856E),
+        ),
           onPressed: () {
             showDialog(
                 context: context,
@@ -192,12 +218,18 @@ class _CommentsState extends State<Comments> {
                     content: Text("¿Seguro que quiere eliminar el comentario?"),
                     actions: [
                       ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: Color(0xFFBB856E),
+                          ),
                           onPressed: () async {
                             deleteComment(comment.id);
                           },
                           child: Text("Si")
                       ),
                       ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: Color(0xFFBB856E),
+                          ),
                           onPressed: () {
                             Navigator.pop(context);
                           },

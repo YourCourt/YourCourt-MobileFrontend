@@ -14,8 +14,10 @@ class ProductBooking {
     List<ProductBookingLine> l = [];
     id = json["id"];
     bookingId = json["booking"];
-    for (var line in json["lines"]){
-      l.add(ProductBookingLine.fromJson(line));
+    if(json["lines"] !=null ){
+      for (var line in json["lines"]){
+        l.add(ProductBookingLine.fromJson(line));
+      }
     }
     lines = l;
   }
