@@ -1,5 +1,3 @@
-
-
 class LoginUser {
 
 String username;
